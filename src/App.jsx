@@ -28,6 +28,7 @@ import CarDetailsPage from './pages/customer/CarDetails.jsx';
 import AboutPage from './pages/customer/About.jsx';
 import ReviewsPage from './pages/customer/Reviews.jsx';
 import ContactPage from './pages/customer/Contact.jsx';
+import InquiryModal from './components/customer/InquiryModal.jsx';
 
 import car1 from './assets/car1.png';
 import car2 from './assets/car2.png';
@@ -139,6 +140,9 @@ function App() {
   useEffect(() => {
     localStorage.setItem('adminSettings', JSON.stringify(adminSettings));
   }, [adminSettings]);
+
+  const [inquiryCar, setInquiryCar] = useState(null);
+  const [isInquiryOpen, setIsInquiryOpen] = useState(false);
 
   const [isAddCarOpen, setIsAddCarOpen] = useState(false);
   const [isEditCarOpen, setIsEditCarOpen] = useState(false);
@@ -489,37 +493,79 @@ function App() {
       toast.error(`${car.name} is currently not available for rent.`);
       return;
     }
+    setInquiryCar(car);
+    setIsInquiryOpen(true);
+  };
 
-    const pickupDate = new Date();
-    const returnDate = new Date();
-    returnDate.setDate(pickupDate.getDate() + 3); // Default 3 days
+  const handleInquirySubmit = (inquiryData) => {
+    const { car, customerName, email, phone, pickupDate, durationDays, dropoffLocation, purpose, specialRequests } = inquiryData;
 
-    const newBookingObj = {
+    const pickup = new Date(pickupDate);
+    const returnDt = new Date(pickup);
+    returnDt.setDate(pickup.getDate() + durationDays);
+    
+    const totalAmount = car.pricePerDay * durationDays;
+
+    const bookingObj = {
       id: `B-${Math.floor(1000 + Math.random() * 9000)}`,
-      customerName: 'DriveX Guest',
+      customerName,
       carName: car.name,
-      pickupDate: pickupDate.toISOString().split('T')[0],
-      returnDate: returnDate.toISOString().split('T')[0],
+      pickupDate: pickupDate,
+      returnDate: returnDt.toISOString().split('T')[0],
       status: 'Pending',
-      price: `₹${(car.pricePerDay * 3).toLocaleString()}`
+      price: `₹${totalAmount.toLocaleString()}`,
+      dropoffLocation,
+      purpose,
+      specialRequests
     };
 
-    const priceNum = car.pricePerDay * 3;
+    // Create corresponding payment
     const paymentObj = {
-      id: `pay-${newBookingObj.id}`,
+      id: `pay-${bookingObj.id}`,
       invoiceId: `INV-2026-${Math.floor(100 + Math.random() * 900)}`,
-      customerName: newBookingObj.customerName,
-      amount: priceNum,
-      date: newBookingObj.pickupDate,
+      customerName,
+      amount: totalAmount,
+      date: bookingObj.pickupDate,
       method: 'Credit Card',
       status: 'Pending'
     };
 
+    // Upsert customer profile
+    const exists = customersList.find(c => c.email.toLowerCase() === email.toLowerCase());
+    if (!exists) {
+      const randomAvatar = localAvatars[Math.floor(Math.random() * localAvatars.length)];
+      const customerObj = {
+        id: `cust-${Date.now()}`,
+        name: customerName,
+        email: email,
+        phone: phone,
+        totalBookings: 1,
+        totalSpent: 0,
+        avatar: randomAvatar
+      };
+      setCustomersList(prevCustomers => [customerObj, ...prevCustomers]);
+    } else {
+      setCustomersList(prevList => prevList.map(c => {
+        if (c.email.toLowerCase() === email.toLowerCase()) {
+          return {
+            ...c,
+            totalBookings: c.totalBookings + 1
+          };
+        }
+        return c;
+      }));
+    }
+
     setPaymentsList(prevPayments => [paymentObj, ...prevPayments]);
-    setBookingsList(prevBookings => [newBookingObj, ...prevBookings]);
+    setBookingsList(prevBookings => [bookingObj, ...prevBookings]);
     setCarsList(prevCars => prevCars.map(c => c.id === car.id ? { ...c, status: 'Booked' } : c));
-    toast.success(`Congratulations! Booking request sent for ${car.name}. Estimated rate: ₹${(car.pricePerDay * 3).toLocaleString()} for 3 days.`, {
-      position: "top-right"
+    
+    setIsInquiryOpen(false);
+    setInquiryCar(null);
+
+    toast.success(`Booking inquiry submitted for ${car.name}! Dynamic quote: ₹${totalAmount.toLocaleString()} for ${durationDays} days.`, {
+      position: "top-right",
+      autoClose: 5000
     });
   };
 
@@ -596,6 +642,10 @@ function App() {
         onResetSystemData={handleResetSystemData}
         handleRentCar={handleRentCar}
         handleContactSubmit={handleContactSubmit}
+        inquiryCar={inquiryCar}
+        isInquiryOpen={isInquiryOpen}
+        setIsInquiryOpen={setIsInquiryOpen}
+        onInquirySubmit={handleInquirySubmit}
       />
     </Router>
   );
@@ -654,7 +704,11 @@ function AppContent({
   onAddReview,
   onResetSystemData,
   handleRentCar,
-  handleContactSubmit
+  handleContactSubmit,
+  inquiryCar,
+  isInquiryOpen,
+  setIsInquiryOpen,
+  onInquirySubmit
 }) {
   const location = useLocation();
   const navigate = useNavigate();
@@ -1289,6 +1343,13 @@ function AppContent({
       </main>
 
       <CustomerFooter footer={adminSettings.footerContent} contact={adminSettings.contactInformation} websiteName={adminSettings.websiteName} />
+
+      <InquiryModal 
+        car={inquiryCar}
+        isOpen={isInquiryOpen}
+        onClose={() => setIsInquiryOpen(false)}
+        onSubmit={onInquirySubmit}
+      />
 
       <ToastContainer 
         position="top-right" 

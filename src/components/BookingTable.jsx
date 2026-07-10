@@ -66,7 +66,22 @@ function BookingTable({ bookings, onUpdateBookingStatus, onDeleteBooking }) {
             bookings.map((booking) => (
               <tr key={booking.id}>
                 <td className="fw-semibold text-primary">{booking.id}</td>
-                <td>{booking.customerName}</td>
+                <td>
+                  <div className="fw-semibold">{booking.customerName}</div>
+                  {booking.dropoffLocation && (
+                    <div className="text-muted mt-1" style={{ fontSize: '0.75rem' }}>
+                      <span className="me-2" title="Drop-off Location">
+                        <i className="fas fa-map-marker-alt text-danger me-1"></i>
+                        {booking.dropoffLocation}
+                      </span>
+                      {booking.purpose && (
+                        <span className="badge bg-secondary-subtle text-secondary" style={{ fontSize: '0.65rem' }}>
+                          {booking.purpose}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </td>
                 <td className="fw-semibold">
                   <div className="d-flex align-items-center gap-2">
                     <img 
