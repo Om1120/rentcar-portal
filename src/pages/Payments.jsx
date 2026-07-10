@@ -94,7 +94,7 @@ function Payments({ paymentsList }) {
                     <td>{pay.date}</td>
                     <td>
                       <span className="d-flex align-items-center gap-2">
-                        <i className={`fas ${pay.method === 'PayPal' ? 'fa-brands fa-paypal text-primary' : pay.method === 'Credit Card' ? 'fa-credit-card text-success' : 'fa-university text-info'}`}></i>
+                        <i className={pay.method === 'PayPal' ? 'fab fa-paypal text-primary' : pay.method === 'Credit Card' ? 'fas fa-credit-card text-success' : 'fas fa-university text-info'}></i>
                         {pay.method}
                       </span>
                     </td>

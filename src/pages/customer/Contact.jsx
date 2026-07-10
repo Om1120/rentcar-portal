@@ -16,6 +16,11 @@ const ContactGrid = styled.div`
   grid-template-columns: 1fr 1.5fr;
   gap: 50px;
   align-items: start;
+  
+  @media (max-width: 991.98px) {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
 `;
 
 const InfoCol = styled.div`
@@ -81,6 +86,10 @@ const FormCard = styled.div`
   border-radius: 20px;
   padding: 3rem;
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  
+  @media (max-width: 768px) {
+    padding: 2rem 1.5rem;
+  }
 `;
 
 const Form = styled.form`

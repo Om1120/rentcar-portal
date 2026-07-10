@@ -21,6 +21,11 @@ const ControlsBar = styled.div`
   align-items: center;
   gap: 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
 `;
 
 const SearchBox = styled.div`
@@ -58,6 +63,10 @@ const FiltersGroup = styled.div`
   gap: 16px;
   flex: 2;
   justify-content: flex-end;
+  
+  @media (max-width: 576px) {
+    flex-direction: column;
+  }
 `;
 
 const SelectWrapper = styled.div`
@@ -102,10 +111,21 @@ const CarsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 30px;
+  
+  @media (max-width: 991.98px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  
+  @media (max-width: 575.98px) {
+    grid-template-columns: 1fr;
+  }
 
   /* Center the last card if it is the only item in the last row */
-  & > *:last-child:nth-child(3n - 2) {
-    grid-column-start: 2;
+  @media (min-width: 992px) {
+    & > *:last-child:nth-child(3n - 2) {
+      grid-column-start: 2;
+    }
   }
 `;
 

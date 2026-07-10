@@ -16,6 +16,11 @@ const ContentGrid = styled.div`
   gap: 60px;
   align-items: center;
   margin-bottom: 5rem;
+  
+  @media (max-width: 991.98px) {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
 `;
 
 const TextBlock = styled.div`
@@ -61,6 +66,11 @@ const MissionVisionGrid = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: 40px;
   margin-bottom: 5rem;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
 `;
 
 const MVCard = styled.div`
@@ -90,6 +100,13 @@ const StatsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
+  
+  @media (max-width: 991.98px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 575.98px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 function About({ about }) {

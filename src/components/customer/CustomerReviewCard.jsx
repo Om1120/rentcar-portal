@@ -82,8 +82,8 @@ const Comment = styled.p`
 const CarText = styled.div`
   margin-top: 1.2rem;
   font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--website-primary, #7C3AED);
+  font-weight: 700;
+  color: var(--website-secondary, #06B6D4);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 `;

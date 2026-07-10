@@ -71,6 +71,10 @@ const CaptionTitle = styled.h2`
   margin-bottom: 1.2rem;
   letter-spacing: -1px;
   text-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  
+  @media (max-width: 767.98px) {
+    font-size: 2.2rem;
+  }
 `;
 
 const CaptionSubtitle = styled.p`
@@ -115,12 +119,30 @@ const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 30px;
+  
+  @media (max-width: 991.98px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  
+  @media (max-width: 575.98px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const FeaturesGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
+  
+  @media (max-width: 991.98px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  
+  @media (max-width: 575.98px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const StatsGrid = styled.div`
@@ -128,12 +150,28 @@ const StatsGrid = styled.div`
   grid-template-columns: repeat(5, 1fr);
   gap: 20px;
   margin-bottom: 3rem;
+  
+  @media (max-width: 991.98px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  @media (max-width: 767.98px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const ChartsGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1.5fr;
   gap: 30px;
+  
+  @media (max-width: 991.98px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const CenterRow = styled.div`

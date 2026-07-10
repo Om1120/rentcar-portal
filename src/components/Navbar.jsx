@@ -1,7 +1,7 @@
 import React from 'react';
 import adminImage from '../assets/admin image.jpeg';
 
-function Navbar({ onToggleMobileSidebar }) {
+function Navbar({ darkMode, onToggleTheme, onLogout, onToggleMobileSidebar }) {
   return (
     <header className="dashboard-navbar">
       <div className="d-flex align-items-center gap-3">
@@ -27,6 +27,16 @@ function Navbar({ onToggleMobileSidebar }) {
       <div className="d-flex align-items-center gap-3">
         <button className="nav-icon-btn d-md-none" aria-label="Search">
           <i className="fas fa-search"></i>
+        </button>
+
+        <button 
+          className="nav-icon-btn text-danger" 
+          onClick={onLogout} 
+          aria-label="Sign Out"
+          style={{ cursor: 'pointer' }}
+          title="Sign Out"
+        >
+          <i className="fas fa-sign-out-alt"></i>
         </button>
  
         <div className="nav-profile">

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -17,6 +17,7 @@ import PaymentsAdmin from './pages/Payments.jsx';
 import ReportsAdmin from './pages/Reports.jsx';
 import ReviewsAdmin from './pages/Reviews.jsx';
 import SettingsAdmin from './pages/Settings.jsx';
+import AdminLogin from './components/AdminLogin.jsx';
 
 // Customer components & pages
 import CustomerNavbar from './components/customer/CustomerNavbar.jsx';
@@ -86,6 +87,9 @@ function App() {
   const [darkMode, setDarkMode] = useState(true);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileSidebarShow, setMobileSidebarShow] = useState(false);
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(() => {
+    return localStorage.getItem('isAdminAuthenticated') === 'true';
+  });
 
   const [carsList, setCarsList] = useState(initialCarsData);
   const [bookingsList, setBookingsList] = useState(recentBookingsData);
@@ -280,6 +284,36 @@ function App() {
     toast.success(`Created reservation for ${bookingObj.customerName}!`);
   };
 
+  const handleUpdateBookingStatus = (bookingId, newStatus) => {
+    const matchedBooking = bookingsList.find(b => b.id === bookingId);
+    if (!matchedBooking) return;
+
+    setBookingsList(bookingsList.map(b => b.id === bookingId ? { ...b, status: newStatus } : b));
+    
+    // Update car status accordingly
+    if (newStatus === 'Confirmed') {
+      setCarsList(carsList.map(c => c.name === matchedBooking.carName ? { ...c, status: 'Booked' } : c));
+      toast.success(`Booking ${bookingId} has been approved!`);
+    } else if (newStatus === 'Completed' || newStatus === 'Cancelled') {
+      setCarsList(carsList.map(c => c.name === matchedBooking.carName ? { ...c, status: 'Available' } : c));
+      if (newStatus === 'Completed') {
+        toast.success(`Booking ${bookingId} marked as completed.`);
+      } else {
+        toast.error(`Booking ${bookingId} has been cancelled.`);
+      }
+    }
+  };
+
+  const handleDeleteBooking = (bookingId) => {
+    const matchedBooking = bookingsList.find(b => b.id === bookingId);
+    if (matchedBooking && (matchedBooking.status === 'Confirmed' || matchedBooking.status === 'Pending')) {
+      // Return car to available
+      setCarsList(carsList.map(c => c.name === matchedBooking.carName ? { ...c, status: 'Available' } : c));
+    }
+    setBookingsList(bookingsList.filter(b => b.id !== bookingId));
+    toast.error(`Booking ${bookingId} deleted.`);
+  };
+
   return (
     <Router>
       <AppContent 
@@ -329,6 +363,10 @@ function App() {
         handleDeleteCustomer={handleDeleteCustomer}
         handleDeleteReview={handleDeleteReview}
         handleCreateBookingSubmit={handleCreateBookingSubmit}
+        onUpdateBookingStatus={handleUpdateBookingStatus}
+        onDeleteBooking={handleDeleteBooking}
+        isAdminAuthenticated={isAdminAuthenticated}
+        setIsAdminAuthenticated={setIsAdminAuthenticated}
       />
     </Router>
   );
@@ -379,9 +417,14 @@ function AppContent({
   handleEditCustomerSubmit,
   handleDeleteCustomer,
   handleDeleteReview,
-  handleCreateBookingSubmit
+  handleCreateBookingSubmit,
+  onUpdateBookingStatus,
+  onDeleteBooking,
+  isAdminAuthenticated,
+  setIsAdminAuthenticated
 }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const isAdminPath = location.pathname.startsWith('/admin');
 
   // Customer website actions
@@ -430,6 +473,14 @@ function AppContent({
   };
 
   if (isAdminPath) {
+    if (!isAdminAuthenticated) {
+      return (
+        <AdminLogin 
+          onLoginSuccess={() => setIsAdminAuthenticated(true)} 
+          darkMode={darkMode}
+        />
+      );
+    }
     return (
       <div className="dashboard-app" data-theme={darkMode ? 'dark' : 'light'}>
         <div className="dashboard-layout">
@@ -447,6 +498,12 @@ function AppContent({
               darkMode={darkMode} 
               onToggleTheme={handleToggleTheme}
               onToggleMobileSidebar={handleToggleMobileSidebar}
+              onLogout={() => {
+                setIsAdminAuthenticated(false);
+                localStorage.removeItem('isAdminAuthenticated');
+                toast.info("Logged out successfully.");
+                navigate('/');
+              }}
             />
 
             <main className="dashboard-content">
@@ -480,6 +537,8 @@ function AppContent({
                     <BookingsAdmin 
                       bookingsList={bookingsList} 
                       onOpenCreateBooking={() => setIsCreateBookingOpen(true)} 
+                      onUpdateBookingStatus={onUpdateBookingStatus}
+                      onDeleteBooking={onDeleteBooking}
                     />
                   } 
                 />

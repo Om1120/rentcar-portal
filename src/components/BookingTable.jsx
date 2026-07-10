@@ -13,7 +13,7 @@ import car13 from '../assets/car13.png';
 import car14 from '../assets/car14.png';
 import car16 from '../assets/car16.png';
 
-function BookingTable({ bookings }) {
+function BookingTable({ bookings, onUpdateBookingStatus, onDeleteBooking }) {
   const getStatusClass = (status) => {
     switch (status?.toLowerCase()) {
       case 'confirmed':
@@ -58,6 +58,7 @@ function BookingTable({ bookings }) {
             <th>Return</th>
             <th>Status</th>
             <th>Price</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -92,11 +93,53 @@ function BookingTable({ bookings }) {
                   </span>
                 </td>
                 <td className="fw-bold">{booking.price}</td>
+                <td>
+                  <div className="d-flex gap-2">
+                    {booking.status === 'Pending' && (
+                      <button 
+                        className="btn btn-sm btn-outline-light border border-success border-opacity-20 text-success p-1 px-2"
+                        title="Approve Booking"
+                        style={{ borderRadius: '6px', fontSize: '0.8rem', cursor: 'pointer' }}
+                        onClick={() => onUpdateBookingStatus && onUpdateBookingStatus(booking.id, 'Confirmed')}
+                      >
+                        <i className="fas fa-check"></i>
+                      </button>
+                    )}
+                    {booking.status === 'Confirmed' && (
+                      <button 
+                        className="btn btn-sm btn-outline-light border border-primary border-opacity-20 text-primary p-1 px-2"
+                        title="Mark Completed"
+                        style={{ borderRadius: '6px', fontSize: '0.8rem', cursor: 'pointer' }}
+                        onClick={() => onUpdateBookingStatus && onUpdateBookingStatus(booking.id, 'Completed')}
+                      >
+                        <i className="fas fa-flag-checkered"></i>
+                      </button>
+                    )}
+                    {(booking.status === 'Pending' || booking.status === 'Confirmed') && (
+                      <button 
+                        className="btn btn-sm btn-outline-light border border-warning border-opacity-20 text-warning p-1 px-2"
+                        title="Cancel Booking"
+                        style={{ borderRadius: '6px', fontSize: '0.8rem', cursor: 'pointer' }}
+                        onClick={() => onUpdateBookingStatus && onUpdateBookingStatus(booking.id, 'Cancelled')}
+                      >
+                        <i className="fas fa-ban"></i>
+                      </button>
+                    )}
+                    <button 
+                      className="btn btn-sm btn-outline-light border border-danger border-opacity-20 text-danger p-1 px-2"
+                      title="Delete Booking Record"
+                      style={{ borderRadius: '6px', fontSize: '0.8rem', cursor: 'pointer' }}
+                      onClick={() => onDeleteBooking && onDeleteBooking(booking.id)}
+                    >
+                      <i className="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="7" className="text-center py-4 text-muted">
+              <td colSpan="8" className="text-center py-4 text-muted">
                 No bookings found.
               </td>
             </tr>

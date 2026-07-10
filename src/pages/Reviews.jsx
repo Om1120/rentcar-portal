@@ -72,7 +72,7 @@ function Reviews({ reviewsList, onDeleteReview }) {
                 </div>
 
                 <div className="d-flex justify-content-between align-items-center pt-3 border-top border-secondary border-opacity-10 mt-auto">
-                  <span style={{ fontSize: '0.78rem' }} className="badge bg-primary bg-opacity-10 text-primary">
+                  <span style={{ fontSize: '0.78rem', color: '#06b6d4', backgroundColor: 'rgba(6, 182, 212, 0.1)', border: '1px solid rgba(6, 182, 212, 0.15)' }} className="badge px-2 py-1 rounded-pill">
                     <i className="fas fa-car me-1"></i>{rev.carName}
                   </span>
                   

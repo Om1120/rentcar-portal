@@ -15,8 +15,8 @@
   --border-color: #334155;
   --card-border: rgba(124, 58, 237, 0.15);
   --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-  --glass-blur: blur(16px);
-  --navbar-bg: rgba(15, 23, 42, 0.75);
+  --glass-blur: blur(20px) saturate(180%);
+  --navbar-bg: rgba(15, 23, 42, 0.35);
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
   --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
   --table-hover: rgba(255, 255, 255, 0.02);
@@ -28,6 +28,25 @@
   --warning: #F59E0B;
   --danger: #EF4444;
   --hover-glow: rgba(124, 58, 237, 0.35);
+}
+
+
+
+.dashboard-app .form-select option {
+  background-color: var(--bg-card);
+  color: var(--text-main);
+}
+
+.dashboard-app .btn-outline-light {
+  border-color: var(--border-color) !important;
+  color: var(--text-main) !important;
+  background-color: transparent !important;
+}
+
+.dashboard-app .btn-outline-light:hover {
+  background-color: var(--primary) !important;
+  color: #ffffff !important;
+  border-color: var(--primary) !important;
 }
 
 /* Global Reset/Overrides inside App */

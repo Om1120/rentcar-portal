@@ -5,19 +5,19 @@ function Sidebar({ collapsed, toggleCollapsed, mobileShow, toggleMobileShow }) {
   const location = useLocation();
 
   const menuItems = [
-    { name: 'Dashboard', path: '/', icon: 'fa-th-large' },
-    { name: 'Cars', path: '/cars', icon: 'fa-car' },
-    { name: 'Bookings', path: '/bookings', icon: 'fa-calendar-check' },
-    { name: 'Customers', path: '/customers', icon: 'fa-users' },
-    { name: 'Payments', path: '/payments', icon: 'fa-credit-card' },
-    { name: 'Reports', path: '/reports', icon: 'fa-chart-bar' },
-    { name: 'Reviews', path: '/reviews', icon: 'fa-star' },
-    { name: 'Settings', path: '/settings', icon: 'fa-cog' },
+    { name: 'Dashboard', path: '/admin', icon: 'fa-th-large' },
+    { name: 'Cars', path: '/admin/cars', icon: 'fa-car' },
+    { name: 'Bookings', path: '/admin/bookings', icon: 'fa-calendar-check' },
+    { name: 'Customers', path: '/admin/customers', icon: 'fa-users' },
+    { name: 'Payments', path: '/admin/payments', icon: 'fa-credit-card' },
+    { name: 'Reports', path: '/admin/reports', icon: 'fa-chart-bar' },
+    { name: 'Reviews', path: '/admin/reviews', icon: 'fa-star' },
+    { name: 'Settings', path: '/admin/settings', icon: 'fa-cog' },
   ];
 
   const isActive = (path) => {
-    if (path === '/') {
-      return location.pathname === '/';
+    if (path === '/admin') {
+      return location.pathname === '/admin' || location.pathname === '/admin/';
     }
     return location.pathname.startsWith(path);
   };

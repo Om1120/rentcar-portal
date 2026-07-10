@@ -1,118 +1,139 @@
 import React from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
-import { FaCarSide } from 'react-icons/fa';
-import CustomButton from './CustomButton';
+import { FaHome, FaCar, FaBookOpen, FaStar, FaEnvelope } from 'react-icons/fa';
+import adminImage from '../../assets/admin image.jpeg';
 
-const Nav = styled.nav`
-  background: rgba(11, 15, 25, 0.85);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  position: sticky;
-  top: 0;
+const NavContainer = styled.div`
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 1000;
-  height: 80px;
+  width: 90%;
+  max-width: 530px;
   display: flex;
-  align-items: center;
+  justify-content: center;
 `;
 
-const Container = styled.div`
-  width: 100%;
-  max-width: 1300px;
-  margin: 0 auto;
-  padding: 0 24px;
+const NavPill = styled.nav`
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 40px;
+  padding: 8px 16px;
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-`;
-
-const Brand = styled(Link)`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 1.6rem;
-  font-weight: 800;
-  text-decoration: none;
-  background: linear-gradient(135deg, var(--website-primary, #7C3AED) 0%, var(--website-secondary, #06B6D4) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-`;
-
-const NavLinks = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 32px;
+  width: 100%;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.1);
 `;
 
 const MenuLink = styled(NavLink)`
-  color: #b3c5df;
-  font-weight: 600;
-  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-decoration: none;
-  transition: all 0.3s ease;
-  position: relative;
-  padding: 4px 0;
+  color: #b3c5df; /* muted light blue-grey */
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 30px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  gap: 8px;
+  
+  svg {
+    font-size: 1.25rem;
+    transition: all 0.3s ease;
+  }
 
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: var(--website-secondary, #06B6D4);
-    transition: width 0.3s ease;
+  span {
+    font-size: 0.78rem;
+    font-weight: 800;
+    display: none;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
   }
 
   &:hover {
-    color: #ffffff;
-    &::after {
-      width: 100%;
+    color: var(--website-secondary, #06B6D4);
+    
+    .avatar-wrapper {
+      border-color: var(--website-secondary, #06B6D4);
     }
   }
 
   &.active {
+    background: linear-gradient(135deg, var(--website-primary, #7C3AED) 0%, var(--website-secondary, #06B6D4) 100%);
     color: #ffffff;
-    &::after {
-      width: 100%;
-      background: var(--website-primary, #7C3AED);
+    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.35);
+    padding: 8px 18px;
+    
+    svg {
+      color: #ffffff;
+    }
+    
+    span {
+      display: block;
+    }
+
+    .avatar-wrapper {
+      border-color: #ffffff;
     }
   }
 `;
 
-const NavActions = styled.div`
+const AvatarWrapper = styled.div`
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--website-secondary, #06B6D4);
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: center;
+  transition: all 0.3s ease;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 `;
 
-function CustomerNavbar({ websiteName }) {
+function CustomerNavbar() {
   return (
-    <Nav>
-      <Container>
-        <Brand to="/">
-          <FaCarSide style={{ color: 'var(--website-primary, #7C3AED)' }} />
-          <span>{websiteName || 'DriveX'}</span>
-        </Brand>
-
-        <NavLinks>
-          <MenuLink to="/" end>Home</MenuLink>
-          <MenuLink to="/cars">Cars</MenuLink>
-          <MenuLink to="/about">About</MenuLink>
-          <MenuLink to="/reviews">Reviews</MenuLink>
-          <MenuLink to="/contact">Contact</MenuLink>
-        </NavLinks>
-
-        <NavActions>
-          <Link to="/cars" style={{ textDecoration: 'none' }}>
-            <CustomButton size="sm">Explore Fleet</CustomButton>
-          </Link>
-          <Link to="/admin" style={{ textDecoration: 'none' }}>
-            <CustomButton outline size="sm">Admin Portal</CustomButton>
-          </Link>
-        </NavActions>
-      </Container>
-    </Nav>
+    <NavContainer>
+      <NavPill>
+        <MenuLink to="/" end>
+          <FaHome />
+          <span>Home</span>
+        </MenuLink>
+        <MenuLink to="/cars">
+          <FaCar />
+          <span>Cars</span>
+        </MenuLink>
+        <MenuLink to="/about">
+          <FaBookOpen />
+          <span>About</span>
+        </MenuLink>
+        <MenuLink to="/reviews">
+          <FaStar />
+          <span>Reviews</span>
+        </MenuLink>
+        <MenuLink to="/contact">
+          <FaEnvelope />
+          <span>Contact</span>
+        </MenuLink>
+        <MenuLink to="/admin">
+          <AvatarWrapper className="avatar-wrapper">
+            <img src={adminImage} alt="Admin" />
+          </AvatarWrapper>
+          <span>Admin</span>
+        </MenuLink>
+      </NavPill>
+    </NavContainer>
   );
 }
 

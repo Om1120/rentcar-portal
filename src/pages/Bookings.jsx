@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import BookingTable from '../components/BookingTable';
 
-function Bookings({ bookingsList, onOpenCreateBooking }) {
+function Bookings({ bookingsList, onOpenCreateBooking, onUpdateBookingStatus, onDeleteBooking }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
 
@@ -67,7 +67,11 @@ function Bookings({ bookingsList, onOpenCreateBooking }) {
       </div>
 
       <div className="glass-card">
-        <BookingTable bookings={filteredBookings} />
+        <BookingTable 
+          bookings={filteredBookings} 
+          onUpdateBookingStatus={onUpdateBookingStatus} 
+          onDeleteBooking={onDeleteBooking} 
+        />
       </div>
     </div>
   );
