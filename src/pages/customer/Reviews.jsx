@@ -172,7 +172,7 @@ function Reviews({ reviewsList = [], carsList = [], onAddReview }) {
     ? reviewsList 
     : reviewsList.filter(r => r.rating === parseInt(ratingFilter));
 
-  const filterOptions = ['All', '5', '4', '3'];
+  const filterOptions = ['All', '5', '4', '3', '2', '1'];
 
   const handleSubmitReview = (e) => {
     e.preventDefault();

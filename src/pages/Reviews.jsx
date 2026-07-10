@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Reviews({ reviewsList, onDeleteReview }) {
+function Reviews({ reviewsList = [], onDeleteReview }) {
   const renderStars = (rating) => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
@@ -15,6 +15,25 @@ function Reviews({ reviewsList, onDeleteReview }) {
     return stars;
   };
 
+  const totalReviewsCount = reviewsList.length;
+  const avgRating = totalReviewsCount > 0
+    ? (reviewsList.reduce((sum, r) => sum + r.rating, 0) / totalReviewsCount).toFixed(1)
+    : '5.0';
+
+  const starCounts = reviewsList.reduce((acc, r) => {
+    const ratingKey = r.rating || 5;
+    acc[ratingKey] = (acc[ratingKey] || 0) + 1;
+    return acc;
+  }, { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 });
+
+  const starPercentages = [
+    { stars: 5, pct: totalReviewsCount > 0 ? Math.round((starCounts[5] / totalReviewsCount) * 100) : 0 },
+    { stars: 4, pct: totalReviewsCount > 0 ? Math.round((starCounts[4] / totalReviewsCount) * 100) : 0 },
+    { stars: 3, pct: totalReviewsCount > 0 ? Math.round((starCounts[3] / totalReviewsCount) * 100) : 0 },
+    { stars: 2, pct: totalReviewsCount > 0 ? Math.round((starCounts[2] / totalReviewsCount) * 100) : 0 },
+    { stars: 1, pct: totalReviewsCount > 0 ? Math.round((starCounts[1] / totalReviewsCount) * 100) : 0 }
+  ];
+
   return (
     <div className="container-fluid px-0">
       <div className="mb-4">
@@ -25,19 +44,13 @@ function Reviews({ reviewsList, onDeleteReview }) {
       <div className="glass-card mb-4">
         <div className="row align-items-center g-4">
           <div className="col-12 col-md-4 text-center border-end border-secondary border-opacity-10">
-            <h1 className="fw-extrabold mb-1" style={{ fontSize: '3.5rem', color: '#f59e0b' }}>4.8</h1>
-            <div className="mb-2">{renderStars(5)}</div>
-            <p className="text-muted mb-0">Out of 124 total reviews</p>
+            <h1 className="fw-extrabold mb-1" style={{ fontSize: '3.5rem', color: '#f59e0b' }}>{avgRating}</h1>
+            <div className="mb-2">{renderStars(Math.round(parseFloat(avgRating)))}</div>
+            <p className="text-muted mb-0">Out of {totalReviewsCount} total reviews</p>
           </div>
           
           <div className="col-12 col-md-8">
-            {[
-              { stars: 5, pct: 85 },
-              { stars: 4, pct: 10 },
-              { stars: 3, pct: 3 },
-              { stars: 2, pct: 1 },
-              { stars: 1, pct: 1 }
-            ].map((r) => (
+            {starPercentages.map((r) => (
               <div key={r.stars} className="d-flex align-items-center gap-3 mb-2" style={{ fontSize: '0.85rem' }}>
                 <span style={{ width: '50px' }} className="text-start">{r.stars} Stars</span>
                 <div className="progress flex-grow-1" style={{ height: '8px', backgroundColor: 'rgba(255, 255, 255, 0.05)' }}>
