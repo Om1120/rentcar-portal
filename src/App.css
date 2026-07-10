@@ -1,0 +1,513 @@
+/* App.css - Premium Modern Theme (Slate, Blue, Orange) */
+:root {
+  --primary: #0F172A;
+  --secondary: #7C3AED; /* Royal Purple */
+  --accent: #06B6D4;    /* Cyan Blue */
+  --bg: #0F172A;
+  --text: #F8FAFC;
+  --white: #FFFFFF;
+}
+
+html,
+body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+#root {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: left !important;
+  border-inline: none !important;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+  background-color: var(--bg);
+}
+
+section {
+  width: 100%;
+}
+
+.custom-padding {
+  padding: 0 5% !important;
+}
+
+/* Global Typography & Links */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.fw-bold {
+  color: var(--primary);
+}
+
+a,
+span[style*="cursor: pointer"] {
+  color: var(--secondary);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+a:hover,
+span[style*="cursor: pointer"]:hover {
+  color: var(--primary);
+}
+
+.text-dark {
+  color: var(--primary) !important;
+}
+
+/* Override Bootstrap Colors */
+.text-primary {
+  color: var(--secondary) !important;
+}
+
+.bg-primary {
+  background-color: var(--secondary) !important;
+}
+
+/* Buttons - Secondary (Default Actions) */
+.btn {
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.btn-primary {
+  background-color: var(--secondary);
+  border-color: var(--secondary);
+  color: var(--white);
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2);
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+  background-color: var(--secondary) !important;
+  border-color: var(--secondary) !important;
+  color: var(--white) !important;
+  transform: scale(1.02) translateY(-2px);
+  filter: brightness(1.1);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3) !important;
+}
+
+::selection {
+  background-color: var(--secondary);
+  color: var(--white);
+}
+
+::-moz-selection {
+  background-color: var(--secondary);
+  color: var(--white);
+}
+
+/* Accent Buttons (CTAs like Rent Now, Book Now) */
+.btn-outline-primary {
+  color: var(--white) !important;
+  border-color: var(--accent) !important;
+  background-color: var(--accent) !important;
+  box-shadow: 0 4px 10px rgba(255, 107, 0, 0.2) !important;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active {
+  background-color: var(--accent) !important;
+  color: var(--white) !important;
+  border-color: var(--accent) !important;
+  transform: scale(1.03) translateY(-2px);
+  filter: brightness(1.1);
+  box-shadow: 0 10px 25px rgba(255, 107, 0, 0.35) !important;
+}
+
+.btn-outline-light {
+  color: var(--white);
+  border-color: var(--accent);
+  background-color: var(--accent);
+  box-shadow: 0 4px 10px rgba(255, 107, 0, 0.2);
+}
+
+.btn-outline-light:hover {
+  background-color: var(--accent);
+  color: var(--white);
+  border-color: var(--accent);
+  transform: scale(1.03) translateY(-2px);
+  filter: brightness(1.1);
+  box-shadow: 0 10px 25px rgba(255, 107, 0, 0.35);
+}
+
+/* Alternate Light Sections */
+.bg-light {
+  background-color: var(--white) !important;
+  color: var(--text) !important;
+}
+
+.bg-light h1,
+.bg-light h2,
+.bg-light h3,
+.bg-light h4,
+.bg-light h5,
+.bg-light h6 {
+  color: var(--primary) !important;
+}
+
+.text-muted {
+  color: #64748B !important;
+  /* Slate 500 */
+}
+
+.section-padding {
+  padding: 80px 0;
+}
+
+.section-title {
+  font-weight: 700;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+/* Navbar */
+.custom-navbar {
+  background-color: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(2, 6, 23, 0.05);
+  transition: all 0.3s ease;
+  border-bottom: none;
+}
+
+.custom-navbar .nav-link {
+  font-weight: 500;
+  color: var(--text);
+  transition: color 0.3s ease;
+  position: relative;
+}
+
+.custom-navbar .nav-link:hover {
+  color: var(--secondary);
+}
+
+.navbar-brand {
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: var(--primary) !important;
+}
+
+.navbar-brand i {
+  color: var(--secondary);
+}
+
+.navbar-toggler {
+  border-color: #CBD5E1;
+}
+
+.navbar-toggler-icon {
+  filter: none;
+}
+
+/* Hero */
+.hero-section {
+  height: 100vh;
+  width: 100%;
+  background: linear-gradient(rgba(2, 6, 23, 0.75), rgba(2, 6, 23, 0.65)), url('./assets/hero.png') center/cover;
+  display: flex;
+  align-items: center;
+  color: var(--white);
+  text-align: center;
+  border-bottom: 4px solid var(--accent);
+}
+
+.hero-section h1 {
+  font-weight: 800;
+  font-size: 3.5rem;
+  margin-bottom: 20px;
+  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+  color: var(--white);
+}
+
+/* Cards (Car, Testimonials, Info) */
+.car-card,
+.testimonial-card,
+.contact-info-card {
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(2, 6, 23, 0.03);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+  background: var(--white);
+  color: var(--text);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.car-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(2, 6, 23, 0.08);
+  border-color: transparent;
+}
+
+.car-image-container {
+  height: 220px;
+  overflow: hidden;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.car-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.car-card:hover .car-image-container img {
+  transform: scale(1.08);
+}
+
+.car-card-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+/* Service Card & Inquiry Form Container */
+.service-card,
+.inquiry-form-container {
+  background: var(--white);
+  color: var(--text);
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(2, 6, 23, 0.03);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, background-color 0.4s ease;
+  padding: 30px 20px;
+}
+
+.service-card h4 {
+  transition: color 0.4s ease;
+}
+
+.service-text {
+  color: #64748B;
+  transition: color 0.4s ease;
+}
+
+.bg-light .service-card,
+.bg-light .inquiry-form-container {
+  background: var(--white);
+}
+
+.service-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(2, 6, 23, 0.08);
+  border-color: transparent;
+}
+
+/* Service Icons */
+.service-icon {
+  width: 70px;
+  height: 70px;
+  background-color: rgba(59, 130, 246, 0.1);
+  color: var(--secondary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  margin: 0 auto 20px;
+  transition: all 0.4s ease;
+}
+
+.service-card:hover .service-icon {
+  background-color: var(--secondary);
+  color: var(--white);
+  transform: scale(1.0);
+}
+
+/* About */
+.about-image {
+  border-radius: 16px;
+  box-shadow: 0 15px 40px rgba(2, 6, 23, 0.1);
+  width: 100%;
+  height: auto;
+}
+
+/* Forms */
+.inquiry-form-container {
+  padding: 40px;
+}
+
+.form-control,
+.form-select {
+  background-color: var(--bg) !important;
+  border: 1px solid transparent !important;
+  color: var(--text) !important;
+  border-radius: 8px;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--white) !important;
+  border-color: var(--secondary) !important;
+  color: var(--text) !important;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15) !important;
+}
+
+.form-control::placeholder {
+  color: #94A3B8 !important;
+  /* Slate 400 */
+}
+
+/* Testimonials */
+.testimonial-card {
+  padding: 30px;
+}
+
+.testimonial-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--secondary);
+}
+
+/* Contact */
+.contact-info-card {
+  padding: 30px;
+}
+
+.contact-icon {
+  width: 50px;
+  height: 50px;
+  background-color: rgba(59, 130, 246, 0.1);
+  color: var(--secondary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  margin-right: 15px;
+}
+
+/* Accordion FAQ */
+.accordion-item {
+  background-color: var(--white);
+  border: 1px solid #E2E8F0 !important;
+  color: var(--text);
+  margin-bottom: 1rem;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.accordion-button {
+  background-color: var(--white) !important;
+  color: var(--primary) !important;
+  border-bottom: 1px solid var(--bg);
+  font-weight: 600;
+}
+
+.accordion-button:not(.collapsed) {
+  color: var(--secondary) !important;
+  background-color: rgba(59, 130, 246, 0.05) !important;
+  box-shadow: none;
+}
+
+.accordion-button::after {
+  filter: none;
+}
+
+.accordion-body {
+  background-color: var(--white);
+  color: var(--text);
+}
+
+/* Footer */
+.footer {
+  background-color: #020617;
+  color: #94A3B8;
+  padding: 80px 0 30px;
+  border-top: none;
+  font-family: 'Inter', sans-serif;
+  position: relative;
+}
+
+.footer h5,
+.footer h4 {
+  color: #FFFFFF;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.5px;
+}
+
+.footer h4 .text-primary {
+  color: #3B82F6 !important;
+}
+
+.footer p {
+  color: #94A3B8;
+  line-height: 1.8;
+  font-size: 0.95rem;
+}
+
+.footer-link {
+  color: #CBD5E1;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-block;
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.footer-link-light {
+  color: #FFFFFF;
+}
+
+.footer-link:hover,
+.footer-link-light:hover {
+  color: #3B82F6;
+  letter-spacing: 0.5px;
+  transform: translateX(5px);
+}
+
+.social-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #111827;
+  color: #CBD5E1;
+  margin-right: 12px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.social-icon:hover {
+  background-color: #2563EB;
+  color: #FFFFFF;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+}
+
+.footer-divider {
+  border-color: #1E293B;
+  opacity: 1;
+  margin: 50px 0 30px;
+}
+
+@media (min-width: 1600px) {
+  .hero-section h1 {
+    font-size: 4.5rem;
+  }
+}
