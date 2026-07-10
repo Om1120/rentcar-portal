@@ -1,0 +1,8 @@
+node_modules
+dist
+.git
+.git_bak
+.git_bak/**/*
+.git/**/*
+node_modules/**/*
+dist/**/*

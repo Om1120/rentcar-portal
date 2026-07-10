@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import adminImage from '../assets/admin image.jpeg';
 
-function Settings() {
+function Settings({ onResetSystemData }) {
   const [profile, setProfile] = useState({
     name: 'Om Tank',
     email: 'omtank@gmail.com',
@@ -153,6 +153,22 @@ function Settings() {
 
               <button type="submit" className="btn btn-primary px-4 py-2 w-100">Save Configuration</button>
             </form>
+          </div>
+
+          <div className="glass-card mt-4" style={{ borderLeft: '4px solid #ef4444' }}>
+            <h5 className="fw-bold text-danger mb-3">Danger Zone</h5>
+            <p className="text-muted small">Resetting the system will clear all active bookings, new vehicles, and payments stored in local storage, reverting the application to its default demo state.</p>
+            <button 
+              type="button" 
+              className="btn btn-outline-danger w-100 mt-2"
+              onClick={() => {
+                if (window.confirm("Are you absolutely sure you want to reset all local data? This action cannot be undone.")) {
+                  onResetSystemData();
+                }
+              }}
+            >
+              Reset System Database
+            </button>
           </div>
         </div>
       </div>

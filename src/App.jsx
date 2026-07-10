@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -91,12 +91,54 @@ function App() {
     return localStorage.getItem('isAdminAuthenticated') === 'true';
   });
 
-  const [carsList, setCarsList] = useState(initialCarsData);
-  const [bookingsList, setBookingsList] = useState(recentBookingsData);
-  const [customersList, setCustomersList] = useState(initialCustomersData);
-  const [paymentsList, setPaymentsList] = useState(initialPaymentsData);
-  const [reviewsList, setReviewsList] = useState(reviewsData);
-  const [adminSettings] = useState(adminSettingsData);
+  const [carsList, setCarsList] = useState(() => {
+    const saved = localStorage.getItem('carsList');
+    return saved ? JSON.parse(saved) : initialCarsData;
+  });
+  const [bookingsList, setBookingsList] = useState(() => {
+    const saved = localStorage.getItem('bookingsList');
+    return saved ? JSON.parse(saved) : recentBookingsData;
+  });
+  const [customersList, setCustomersList] = useState(() => {
+    const saved = localStorage.getItem('customersList');
+    return saved ? JSON.parse(saved) : initialCustomersData;
+  });
+  const [paymentsList, setPaymentsList] = useState(() => {
+    const saved = localStorage.getItem('paymentsList');
+    return saved ? JSON.parse(saved) : initialPaymentsData;
+  });
+  const [reviewsList, setReviewsList] = useState(() => {
+    const saved = localStorage.getItem('reviewsList');
+    return saved ? JSON.parse(saved) : reviewsData;
+  });
+  const [adminSettings, setAdminSettings] = useState(() => {
+    const saved = localStorage.getItem('adminSettings');
+    return saved ? JSON.parse(saved) : adminSettingsData;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('carsList', JSON.stringify(carsList));
+  }, [carsList]);
+
+  useEffect(() => {
+    localStorage.setItem('bookingsList', JSON.stringify(bookingsList));
+  }, [bookingsList]);
+
+  useEffect(() => {
+    localStorage.setItem('customersList', JSON.stringify(customersList));
+  }, [customersList]);
+
+  useEffect(() => {
+    localStorage.setItem('paymentsList', JSON.stringify(paymentsList));
+  }, [paymentsList]);
+
+  useEffect(() => {
+    localStorage.setItem('reviewsList', JSON.stringify(reviewsList));
+  }, [reviewsList]);
+
+  useEffect(() => {
+    localStorage.setItem('adminSettings', JSON.stringify(adminSettings));
+  }, [adminSettings]);
 
   const [isAddCarOpen, setIsAddCarOpen] = useState(false);
   const [isEditCarOpen, setIsEditCarOpen] = useState(false);
@@ -248,6 +290,34 @@ function App() {
     toast.error(`Review by ${customerName} has been deleted.`);
   };
 
+  const upsertCustomerForBooking = (customerName, amount, isConfirmedOrCompleted) => {
+    const exists = customersList.find(c => c.name.toLowerCase() === customerName.toLowerCase());
+    if (exists) {
+      setCustomersList(prevList => prevList.map(c => {
+        if (c.name.toLowerCase() === customerName.toLowerCase()) {
+          return {
+            ...c,
+            totalBookings: c.totalBookings + 1,
+            totalSpent: c.totalSpent + (isConfirmedOrCompleted ? amount : 0)
+          };
+        }
+        return c;
+      }));
+    } else {
+      const randomAvatar = localAvatars[Math.floor(Math.random() * localAvatars.length)];
+      const customerObj = {
+        id: `cust-${Date.now()}`,
+        name: customerName,
+        email: `${customerName.toLowerCase().replace(/\s+/g, '')}@gmail.com`,
+        phone: `+91 ${Math.floor(60000 + Math.random() * 39999)} ${Math.floor(10000 + Math.random() * 89999)}`,
+        totalBookings: 1,
+        totalSpent: isConfirmedOrCompleted ? amount : 0,
+        avatar: randomAvatar
+      };
+      setCustomersList(prevList => [customerObj, ...prevList]);
+    }
+  };
+
   const handleCreateBookingSubmit = (e) => {
     e.preventDefault();
     if (!newBooking.customerName || !newBooking.carName || !newBooking.pickupDate || !newBooking.returnDate) {
@@ -261,7 +331,7 @@ function App() {
     const days = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)) || 1;
     
     const matchedCar = carsList.find(c => c.name === newBooking.carName);
-    const dailyPrice = matchedCar ? matchedCar.pricePerDay : 30;
+    const dailyPrice = matchedCar ? matchedCar.pricePerDay : 3000;
     const computedPrice = days * dailyPrice;
 
     const bookingObj = {
@@ -274,10 +344,23 @@ function App() {
       price: `₹${computedPrice.toLocaleString()}`
     };
 
-    if (newBooking.status === 'Confirmed') {
+    if (newBooking.status === 'Confirmed' || newBooking.status === 'Completed') {
       setCarsList(carsList.map(c => c.name === newBooking.carName ? { ...c, status: 'Booked' } : c));
     }
 
+    // Add payment record
+    const paymentObj = {
+      id: `pay-${bookingObj.id}`,
+      invoiceId: `INV-2026-${Math.floor(100 + Math.random() * 900)}`,
+      customerName: bookingObj.customerName,
+      amount: computedPrice,
+      date: bookingObj.pickupDate,
+      method: 'Credit Card',
+      status: bookingObj.status === 'Confirmed' || bookingObj.status === 'Completed' ? 'Completed' : bookingObj.status === 'Cancelled' ? 'Refunded' : 'Pending'
+    };
+
+    setPaymentsList(prevPayments => [paymentObj, ...prevPayments]);
+    upsertCustomerForBooking(bookingObj.customerName, computedPrice, bookingObj.status === 'Confirmed' || bookingObj.status === 'Completed');
     setBookingsList([bookingObj, ...bookingsList]);
     setIsCreateBookingOpen(false);
     setNewBooking({ customerName: '', carName: '', pickupDate: '', returnDate: '', price: '', status: 'Pending' });
@@ -288,14 +371,50 @@ function App() {
     const matchedBooking = bookingsList.find(b => b.id === bookingId);
     if (!matchedBooking) return;
 
-    setBookingsList(bookingsList.map(b => b.id === bookingId ? { ...b, status: newStatus } : b));
+    setBookingsList(prevBookings => prevBookings.map(b => b.id === bookingId ? { ...b, status: newStatus } : b));
+    
+    // Update payment status
+    setPaymentsList(prevPayments => prevPayments.map(p => {
+      if (p.id === `pay-${bookingId}`) {
+        let newPayStatus = 'Pending';
+        if (newStatus === 'Confirmed' || newStatus === 'Completed') newPayStatus = 'Completed';
+        else if (newStatus === 'Cancelled') newPayStatus = 'Refunded';
+        return { ...p, status: newPayStatus };
+      }
+      return p;
+    }));
+
+    // Update customer stats
+    const priceNum = parseInt(matchedBooking.price.replace(/[^\d]/g, '')) || 0;
+    const oldStatus = matchedBooking.status;
+    const wasConfirmed = oldStatus === 'Confirmed' || oldStatus === 'Completed';
+    const isConfirmed = newStatus === 'Confirmed' || newStatus === 'Completed';
+
+    let spentDiff = 0;
+    if (!wasConfirmed && isConfirmed) {
+      spentDiff = priceNum;
+    } else if (wasConfirmed && !isConfirmed) {
+      spentDiff = -priceNum;
+    }
+
+    if (spentDiff !== 0) {
+      setCustomersList(prevList => prevList.map(c => {
+        if (c.name.toLowerCase() === matchedBooking.customerName.toLowerCase()) {
+          return {
+            ...c,
+            totalSpent: Math.max(0, c.totalSpent + spentDiff)
+          };
+        }
+        return c;
+      }));
+    }
     
     // Update car status accordingly
     if (newStatus === 'Confirmed') {
-      setCarsList(carsList.map(c => c.name === matchedBooking.carName ? { ...c, status: 'Booked' } : c));
+      setCarsList(prevCars => prevCars.map(c => c.name === matchedBooking.carName ? { ...c, status: 'Booked' } : c));
       toast.success(`Booking ${bookingId} has been approved!`);
     } else if (newStatus === 'Completed' || newStatus === 'Cancelled') {
-      setCarsList(carsList.map(c => c.name === matchedBooking.carName ? { ...c, status: 'Available' } : c));
+      setCarsList(prevCars => prevCars.map(c => c.name === matchedBooking.carName ? { ...c, status: 'Available' } : c));
       if (newStatus === 'Completed') {
         toast.success(`Booking ${bookingId} marked as completed.`);
       } else {
@@ -306,12 +425,118 @@ function App() {
 
   const handleDeleteBooking = (bookingId) => {
     const matchedBooking = bookingsList.find(b => b.id === bookingId);
-    if (matchedBooking && (matchedBooking.status === 'Confirmed' || matchedBooking.status === 'Pending')) {
-      // Return car to available
-      setCarsList(carsList.map(c => c.name === matchedBooking.carName ? { ...c, status: 'Available' } : c));
+    if (!matchedBooking) return;
+
+    if (matchedBooking.status === 'Confirmed' || matchedBooking.status === 'Pending') {
+      setCarsList(prevCars => prevCars.map(c => c.name === matchedBooking.carName ? { ...c, status: 'Available' } : c));
     }
-    setBookingsList(bookingsList.filter(b => b.id !== bookingId));
+
+    const priceNum = parseInt(matchedBooking.price.replace(/[^\d]/g, '')) || 0;
+    const wasConfirmed = matchedBooking.status === 'Confirmed' || matchedBooking.status === 'Completed';
+
+    setCustomersList(prevList => prevList.map(c => {
+      if (c.name.toLowerCase() === matchedBooking.customerName.toLowerCase()) {
+        return {
+          ...c,
+          totalBookings: Math.max(0, c.totalBookings - 1),
+          totalSpent: wasConfirmed ? Math.max(0, c.totalSpent - priceNum) : c.totalSpent
+        };
+      }
+      return c;
+    }));
+
+    setPaymentsList(prevPayments => prevPayments.filter(p => p.id !== `pay-${bookingId}`));
+    setBookingsList(prevBookings => prevBookings.filter(b => b.id !== bookingId));
     toast.error(`Booking ${bookingId} deleted.`);
+  };
+
+  const handleCreateReview = (newReview) => {
+    const reviewObj = {
+      id: `rev-${Date.now()}`,
+      customerName: newReview.customerName,
+      rating: parseInt(newReview.rating),
+      comment: newReview.comment,
+      carName: newReview.carName,
+      date: new Date().toISOString().split('T')[0]
+    };
+    setReviewsList(prevReviews => [reviewObj, ...prevReviews]);
+    toast.success("Thank you for your feedback! Review published.");
+  };
+
+  const handleResetSystemData = () => {
+    localStorage.removeItem('carsList');
+    localStorage.removeItem('bookingsList');
+    localStorage.removeItem('customersList');
+    localStorage.removeItem('paymentsList');
+    localStorage.removeItem('reviewsList');
+    localStorage.removeItem('adminSettings');
+    
+    setCarsList(initialCarsData);
+    setBookingsList(recentBookingsData);
+    setCustomersList(initialCustomersData);
+    setPaymentsList(initialPaymentsData);
+    setReviewsList(reviewsData);
+    setAdminSettings(adminSettingsData);
+    
+    toast.warning("System database reset to initial defaults!", {
+      position: "top-right",
+      autoClose: 2000
+    });
+  };
+
+  const handleRentCar = (car) => {
+    if (car.status !== 'Available') {
+      toast.error(`${car.name} is currently not available for rent.`);
+      return;
+    }
+
+    const pickupDate = new Date();
+    const returnDate = new Date();
+    returnDate.setDate(pickupDate.getDate() + 3); // Default 3 days
+
+    const newBookingObj = {
+      id: `B-${Math.floor(1000 + Math.random() * 9000)}`,
+      customerName: 'DriveX Guest',
+      carName: car.name,
+      pickupDate: pickupDate.toISOString().split('T')[0],
+      returnDate: returnDate.toISOString().split('T')[0],
+      status: 'Pending',
+      price: `₹${(car.pricePerDay * 3).toLocaleString()}`
+    };
+
+    const priceNum = car.pricePerDay * 3;
+    const paymentObj = {
+      id: `pay-${newBookingObj.id}`,
+      invoiceId: `INV-2026-${Math.floor(100 + Math.random() * 900)}`,
+      customerName: newBookingObj.customerName,
+      amount: priceNum,
+      date: newBookingObj.pickupDate,
+      method: 'Credit Card',
+      status: 'Pending'
+    };
+
+    setPaymentsList(prevPayments => [paymentObj, ...prevPayments]);
+    setBookingsList(prevBookings => [newBookingObj, ...prevBookings]);
+    setCarsList(prevCars => prevCars.map(c => c.id === car.id ? { ...c, status: 'Booked' } : c));
+    toast.success(`Congratulations! Booking request sent for ${car.name}. Estimated rate: ₹${(car.pricePerDay * 3).toLocaleString()} for 3 days.`, {
+      position: "top-right"
+    });
+  };
+
+  const handleContactSubmit = (inquiry) => {
+    const exists = customersList.find(c => c.email.toLowerCase() === inquiry.email.toLowerCase());
+    if (!exists) {
+      const newCustomerObj = {
+        id: `cust-${Date.now()}`,
+        name: inquiry.name,
+        email: inquiry.email,
+        phone: inquiry.phone,
+        totalBookings: 0,
+        totalSpent: 0,
+        avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(inquiry.name)}&background=7C3AED&color=fff`
+      };
+      setCustomersList(prevCustomers => [newCustomerObj, ...prevCustomers]);
+    }
   };
 
   return (
@@ -367,6 +592,10 @@ function App() {
         onDeleteBooking={handleDeleteBooking}
         isAdminAuthenticated={isAdminAuthenticated}
         setIsAdminAuthenticated={setIsAdminAuthenticated}
+        onAddReview={handleCreateReview}
+        onResetSystemData={handleResetSystemData}
+        handleRentCar={handleRentCar}
+        handleContactSubmit={handleContactSubmit}
       />
     </Router>
   );
@@ -421,56 +650,15 @@ function AppContent({
   onUpdateBookingStatus,
   onDeleteBooking,
   isAdminAuthenticated,
-  setIsAdminAuthenticated
+  setIsAdminAuthenticated,
+  onAddReview,
+  onResetSystemData,
+  handleRentCar,
+  handleContactSubmit
 }) {
   const location = useLocation();
   const navigate = useNavigate();
   const isAdminPath = location.pathname.startsWith('/admin');
-
-  // Customer website actions
-  const handleRentCar = (car) => {
-    if (car.status !== 'Available') {
-      toast.error(`${car.name} is currently not available for rent.`);
-      return;
-    }
-
-    const pickupDate = new Date();
-    const returnDate = new Date();
-    returnDate.setDate(pickupDate.getDate() + 3); // Default 3 days
-
-    const newBookingObj = {
-      id: `B-${Math.floor(1000 + Math.random() * 9000)}`,
-      customerName: 'DriveX Guest',
-      carName: car.name,
-      pickupDate: pickupDate.toISOString().split('T')[0],
-      returnDate: returnDate.toISOString().split('T')[0],
-      status: 'Pending',
-      price: `₹${(car.pricePerDay * 3).toLocaleString()}`
-    };
-
-    // Update parent states
-    setBookingsList([newBookingObj, ...bookingsList]);
-    setCarsList(carsList.map(c => c.id === car.id ? { ...c, status: 'Booked' } : c));
-    toast.success(`Congratulations! Booking request sent for ${car.name}. Estimated rate: ₹${(car.pricePerDay * 3).toLocaleString()} for 3 days.`, {
-      position: "top-right"
-    });
-  };
-
-  const handleContactSubmit = (inquiry) => {
-    const exists = customersList.find(c => c.email.toLowerCase() === inquiry.email.toLowerCase());
-    if (!exists) {
-      const newCustomerObj = {
-        id: `cust-${Date.now()}`,
-        name: inquiry.name,
-        email: inquiry.email,
-        phone: inquiry.phone,
-        totalBookings: 0,
-        totalSpent: 0,
-        avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(inquiry.name)}&background=7C3AED&color=fff`
-      };
-      setCustomersList([newCustomerObj, ...customersList]);
-    }
-  };
 
   if (isAdminPath) {
     if (!isAdminAuthenticated) {
@@ -517,6 +705,8 @@ function AppContent({
                       onOpenAddCustomer={() => setIsAddCustomerOpen(true)}
                       bookingsList={bookingsList}
                       carsList={carsList}
+                      customersList={customersList}
+                      paymentsList={paymentsList}
                     />
                   } 
                 />
@@ -559,7 +749,7 @@ function AppContent({
                     <PaymentsAdmin paymentsList={paymentsList} />
                   } 
                 />
-                <Route path="/admin/reports" element={<ReportsAdmin />} />
+                <Route path="/admin/reports" element={<ReportsAdmin bookingsList={bookingsList} carsList={carsList} reviewsList={reviewsList} />} />
                 <Route 
                   path="/admin/reviews" 
                   element={
@@ -569,7 +759,7 @@ function AppContent({
                     />
                   } 
                 />
-                <Route path="/admin/settings" element={<SettingsAdmin />} />
+                <Route path="/admin/settings" element={<SettingsAdmin onResetSystemData={onResetSystemData} />} />
               </Routes>
             </main>
           </div>
@@ -1093,7 +1283,7 @@ function AppContent({
           <Route path="/cars" element={<CarsPage carsList={carsList} onRent={handleRentCar} />} />
           <Route path="/cars/:id" element={<CarDetailsPage carsList={carsList} onRent={handleRentCar} />} />
           <Route path="/about" element={<AboutPage about={adminSettings.aboutContent} />} />
-          <Route path="/reviews" element={<ReviewsPage reviewsList={reviewsList} />} />
+          <Route path="/reviews" element={<ReviewsPage reviewsList={reviewsList} carsList={carsList} onAddReview={onAddReview} />} />
           <Route path="/contact" element={<ContactPage contact={adminSettings.contactInformation} onContactSubmit={handleContactSubmit} />} />
         </Routes>
       </main>

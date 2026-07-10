@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 
-function Payments({ paymentsList }) {
+function Payments({ paymentsList = [] }) {
   const [searchTerm, setSearchTerm] = useState('');
 
   const filteredPayments = paymentsList.filter(pay => 
@@ -22,6 +22,23 @@ function Payments({ paymentsList }) {
     }
   };
 
+  // Dynamic calculations
+  const netEarnings = paymentsList
+    .filter(pay => pay.status.toLowerCase() === 'completed')
+    .reduce((sum, pay) => sum + pay.amount, 0);
+
+  const pendingPayments = paymentsList
+    .filter(pay => pay.status.toLowerCase() === 'pending')
+    .reduce((sum, pay) => sum + pay.amount, 0);
+
+  const refundedPayments = paymentsList
+    .filter(pay => pay.status.toLowerCase() === 'refunded')
+    .reduce((sum, pay) => sum + pay.amount, 0);
+
+  const netEarningsCount = paymentsList.filter(pay => pay.status.toLowerCase() === 'completed').length;
+  const pendingPaymentsCount = paymentsList.filter(pay => pay.status.toLowerCase() === 'pending').length;
+  const refundedPaymentsCount = paymentsList.filter(pay => pay.status.toLowerCase() === 'refunded').length;
+
   return (
     <div className="container-fluid px-0">
       <div className="mb-4">
@@ -33,22 +50,22 @@ function Payments({ paymentsList }) {
         <div className="col-12 col-md-4">
           <div className="glass-card" style={{ borderLeft: '4px solid #10b981' }}>
             <span className="text-muted fw-semibold" style={{ fontSize: '0.8rem' }}>NET EARNINGS</span>
-            <h3 className="fw-extrabold mb-1 mt-2 text-success">₹8,00,950</h3>
-            <small className="text-muted">From 124 bookings</small>
+            <h3 className="fw-extrabold mb-1 mt-2 text-success">₹{netEarnings.toLocaleString()}</h3>
+            <small className="text-muted">From {netEarningsCount} bookings</small>
           </div>
         </div>
         <div className="col-12 col-md-4">
           <div className="glass-card" style={{ borderLeft: '4px solid #f59e0b' }}>
             <span className="text-muted fw-semibold" style={{ fontSize: '0.8rem' }}>PENDING PAYMENTS</span>
-            <h3 className="fw-extrabold mb-1 mt-2 text-warning">₹50,464</h3>
-            <small className="text-muted">2 approvals required</small>
+            <h3 className="fw-extrabold mb-1 mt-2 text-warning">₹{pendingPayments.toLocaleString()}</h3>
+            <small className="text-muted">{pendingPaymentsCount} approvals required</small>
           </div>
         </div>
         <div className="col-12 col-md-4">
           <div className="glass-card" style={{ borderLeft: '4px solid #ef4444' }}>
             <span className="text-muted fw-semibold" style={{ fontSize: '0.8rem' }}>REFUNDED TRANSACTIONS</span>
-            <h3 className="fw-extrabold mb-1 mt-2 text-danger">₹9,296</h3>
-            <small className="text-muted">1 refund complete</small>
+            <h3 className="fw-extrabold mb-1 mt-2 text-danger">₹{refundedPayments.toLocaleString()}</h3>
+            <small className="text-muted">{refundedPaymentsCount} refund complete</small>
           </div>
         </div>
       </div>
