@@ -158,7 +158,6 @@ const StarRatingSelector = styled.div`
 `;
 
 function Reviews({ reviewsList = [], carsList = [], onAddReview }) {
-  const [ratingFilter, setRatingFilter] = useState('All');
   const [showForm, setShowForm] = useState(false);
   
   const [customerName, setCustomerName] = useState('');
@@ -167,12 +166,8 @@ function Reviews({ reviewsList = [], carsList = [], onAddReview }) {
   const [carName, setCarName] = useState('');
   const [hoverRating, setHoverRating] = useState(0);
 
-  // Filter reviews based on rating selection
-  const filteredReviews = ratingFilter === 'All' 
-    ? reviewsList 
-    : reviewsList.filter(r => r.rating === parseInt(ratingFilter));
-
-  const filterOptions = ['All', '5', '4', '3', '2', '1'];
+  // Always show all ratings (no filter)
+  const filteredReviews = reviewsList;
 
   const handleSubmitReview = (e) => {
     e.preventDefault();
@@ -204,23 +199,9 @@ function Reviews({ reviewsList = [], carsList = [], onAddReview }) {
       />
 
       <FilterContainer>
-        <div className="d-flex gap-2">
-          {filterOptions.map((opt) => (
-            <CustomButton 
-              key={opt}
-              outline={ratingFilter !== opt}
-              size="sm"
-              onClick={() => setRatingFilter(opt)}
-            >
-              {opt === 'All' ? 'All Ratings' : `${opt} Stars`}
-              {opt !== 'All' && <FaStar style={{ marginLeft: '4px', verticalAlign: 'middle', color: '#f59e0b' }} />}
-            </CustomButton>
-          ))}
-        </div>
-        
         <CustomButton 
           onClick={() => setShowForm(!showForm)}
-          style={{ background: 'var(--website-primary, #7C3AED)', border: 'none', marginLeft: 'auto' }}
+          style={{ background: 'var(--website-primary, #7C3AED)', border: 'none' }}
         >
           {showForm ? 'Cancel Review' : 'Write a Review'}
         </CustomButton>
@@ -311,7 +292,7 @@ function Reviews({ reviewsList = [], carsList = [], onAddReview }) {
       ) : (
         <EmptyState>
           <h4>No Reviews Found</h4>
-          <p className="mb-0">There are no client reviews with a rating of {ratingFilter} Stars currently.</p>
+          <p className="mb-0">There are no client reviews currently.</p>
         </EmptyState>
       )}
     </PageContainer>

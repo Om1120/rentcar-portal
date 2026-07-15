@@ -85,7 +85,7 @@ import {
 } from './data/mockData';
 
 function App() {
-  const [darkMode, setDarkMode] = useState(true);
+  const darkMode = true;
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileSidebarShow, setMobileSidebarShow] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(() => {
@@ -165,13 +165,7 @@ function App() {
     name: '', email: '', phone: '', initialSpent: ''
   });
 
-  const handleToggleTheme = () => {
-    setDarkMode(!darkMode);
-    toast.info(`Switched to ${!darkMode ? 'Dark' : 'Light'} Theme`, {
-      position: "top-right",
-      autoClose: 1500
-    });
-  };
+
 
   const handleToggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
@@ -628,7 +622,7 @@ function App() {
         setNewBooking={setNewBooking}
         newCustomer={newCustomer}
         setNewCustomer={setNewCustomer}
-        handleToggleTheme={handleToggleTheme}
+
         handleToggleSidebar={handleToggleSidebar}
         handleToggleMobileSidebar={handleToggleMobileSidebar}
         handleAddCarSubmit={handleAddCarSubmit}
@@ -691,7 +685,7 @@ function AppContent({
   setNewBooking,
   newCustomer,
   setNewCustomer,
-  handleToggleTheme,
+
   handleToggleSidebar,
   handleToggleMobileSidebar,
   handleAddCarSubmit,
@@ -744,8 +738,6 @@ function AppContent({
           <div className={`main-panel ${sidebarCollapsed ? 'expanded' : ''}`}>
             
             <Navbar 
-              darkMode={darkMode} 
-              onToggleTheme={handleToggleTheme}
               onToggleMobileSidebar={handleToggleMobileSidebar}
               onLogout={() => {
                 setIsAdminAuthenticated(false);

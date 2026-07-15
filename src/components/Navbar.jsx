@@ -1,7 +1,7 @@
 import React from 'react';
 import adminImage from '../assets/admin image.jpeg';
 
-function Navbar({ darkMode, onToggleTheme, onLogout, onToggleMobileSidebar }) {
+function Navbar({ onLogout, onToggleMobileSidebar }) {
   return (
     <header className="dashboard-navbar">
       <div className="d-flex align-items-center gap-3">
@@ -29,15 +29,7 @@ function Navbar({ darkMode, onToggleTheme, onLogout, onToggleMobileSidebar }) {
           <i className="fas fa-search"></i>
         </button>
 
-        <button 
-          className="nav-icon-btn text-muted" 
-          onClick={onToggleTheme} 
-          aria-label="Toggle Theme"
-          style={{ cursor: 'pointer' }}
-          title={darkMode ? "Switch to Light Theme" : "Switch to Dark Theme"}
-        >
-          <i className={`fas ${darkMode ? 'fa-sun' : 'fa-moon'}`}></i>
-        </button>
+
 
         <button 
           className="nav-icon-btn text-danger" 
