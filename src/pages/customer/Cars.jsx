@@ -22,7 +22,7 @@ const ControlsBar = styled.div`
   gap: 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   
-  .screen-max-768 & {
+  @media (max-width: 768px) {
     flex-direction: column;
     align-items: stretch;
   }
@@ -64,7 +64,7 @@ const FiltersGroup = styled.div`
   flex: 2;
   justify-content: flex-end;
   
-  .screen-max-576 & {
+  @media (max-width: 576px) {
     flex-direction: column;
   }
 `;
@@ -112,17 +112,17 @@ const CarsGrid = styled.div`
   grid-template-columns: repeat(3, 1fr);
   gap: 30px;
   
-  .screen-max-992 & {
+  @media (max-width: 991.98px) {
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
   }
   
-  .screen-max-575 & {
+  @media (max-width: 575.98px) {
     grid-template-columns: 1fr;
   }
 
   /* Center the last card if it is the only item in the last row */
-  .screen-min-992 & {
+  @media (min-width: 992px) {
     & > *:last-child:nth-child(3n - 2) {
       grid-column-start: 2;
     }

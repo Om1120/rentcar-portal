@@ -196,7 +196,7 @@ const Row = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
 
-  .screen-max-576 & {
+  @media (max-width: 576px) {
     grid-template-columns: 1fr;
   }
 `;

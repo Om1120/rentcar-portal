@@ -249,17 +249,19 @@
 }
 
 /* Responsive Sidebar Styles */
-.screen-max-992 .sidebar-container {
-  transform: translateX(-100%);
-  width: 260px !important;
-}
+@media (max-width: 991.98px) {
+  .sidebar-container {
+    transform: translateX(-100%);
+    width: 260px !important;
+  }
 
-.screen-max-992 .sidebar-container.mobile-show {
-  transform: translateX(0);
-}
+  .sidebar-container.mobile-show {
+    transform: translateX(0);
+  }
 
-.screen-max-992 .main-panel {
-  margin-left: 0 !important;
+  .main-panel {
+    margin-left: 0 !important;
+  }
 }
 
 /* Glassmorphism Header / Navbar */

@@ -17,7 +17,7 @@ const ContactGrid = styled.div`
   gap: 50px;
   align-items: start;
   
-  .screen-max-992 & {
+  @media (max-width: 991.98px) {
     grid-template-columns: 1fr;
     gap: 30px;
   }
@@ -87,7 +87,7 @@ const FormCard = styled.div`
   padding: 3rem;
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
   
-  .screen-max-768 & {
+  @media (max-width: 768px) {
     padding: 2rem 1.5rem;
   }
 `;

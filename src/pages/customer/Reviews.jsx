@@ -35,11 +35,11 @@ const ReviewsGrid = styled.div`
   grid-template-columns: repeat(3, 1fr);
   gap: 30px;
   
-  .screen-max-992 & {
+  @media (max-width: 991.98px) {
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
   }
-  .screen-max-575 & {
+  @media (max-width: 575.98px) {
     grid-template-columns: 1fr;
   }
 `;

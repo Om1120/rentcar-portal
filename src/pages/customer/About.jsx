@@ -17,7 +17,7 @@ const ContentGrid = styled.div`
   align-items: center;
   margin-bottom: 5rem;
   
-  .screen-max-992 & {
+  @media (max-width: 991.98px) {
     grid-template-columns: 1fr;
     gap: 30px;
   }
@@ -67,7 +67,7 @@ const MissionVisionGrid = styled.div`
   gap: 40px;
   margin-bottom: 5rem;
   
-  .screen-max-768 & {
+  @media (max-width: 768px) {
     grid-template-columns: 1fr;
     gap: 20px;
   }
@@ -101,10 +101,10 @@ const StatsGrid = styled.div`
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
   
-  .screen-max-992 & {
+  @media (max-width: 991.98px) {
     grid-template-columns: repeat(2, 1fr);
   }
-  .screen-max-575 & {
+  @media (max-width: 575.98px) {
     grid-template-columns: 1fr;
   }
 `;

@@ -501,8 +501,10 @@ span[style*="cursor: pointer"]:hover {
   margin: 50px 0 30px;
 }
 
-.screen-min-1600 .hero-section h1 {
-  font-size: 4.5rem;
+@media (min-width: 1601px) {
+  .hero-section h1 {
+    font-size: 4.5rem;
+  }
 }
 
 /* Customer app styling overrides and helper rules */
