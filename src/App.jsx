@@ -141,6 +141,36 @@ function App() {
     localStorage.setItem('adminSettings', JSON.stringify(adminSettings));
   }, [adminSettings]);
 
+  // Tab state synchronization via localStorage storage event
+  useEffect(() => {
+    const handleStorage = (e) => {
+      try {
+        if (e.key === 'carsList' && e.newValue) {
+          setCarsList(JSON.parse(e.newValue));
+        }
+        if (e.key === 'bookingsList' && e.newValue) {
+          setBookingsList(JSON.parse(e.newValue));
+        }
+        if (e.key === 'customersList' && e.newValue) {
+          setCustomersList(JSON.parse(e.newValue));
+        }
+        if (e.key === 'paymentsList' && e.newValue) {
+          setPaymentsList(JSON.parse(e.newValue));
+        }
+        if (e.key === 'reviewsList' && e.newValue) {
+          setReviewsList(JSON.parse(e.newValue));
+        }
+        if (e.key === 'adminSettings' && e.newValue) {
+          setAdminSettings(JSON.parse(e.newValue));
+        }
+      } catch (err) {
+        console.error("Error syncing storage change: ", err);
+      }
+    };
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, []);
+
   const [inquiryCar, setInquiryCar] = useState(null);
   const [isInquiryOpen, setIsInquiryOpen] = useState(false);
 
