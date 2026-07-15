@@ -235,7 +235,7 @@ function Dashboard({
   if (recentActivityData.length === 0) {
     recentActivityData.push(
       { id: 'act-1', text: 'New booking B-1027 pending review for Porsche 911', time: '5 mins ago', icon: 'fa-calendar-plus', badgeClass: 'bg-primary-subtle text-primary' },
-      { id: 'act-2', text: 'Payment of ₹18,592 received from Smriti Mandhana (B-1028)', time: '2 hours ago', icon: 'fa-receipt', badgeClass: 'bg-success-subtle text-success' }
+      { id: 'act-2', text: 'Payment of ₹18,592 received from Samriti Mandhan (B-1028)', time: '2 hours ago', icon: 'fa-receipt', badgeClass: 'bg-success-subtle text-success' }
     );
   } else {
     // Reverse or slice to keep latest first

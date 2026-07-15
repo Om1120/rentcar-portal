@@ -109,7 +109,7 @@ export const recentBookingsData = [
   },
   {
     id: 'B-1028',
-    customerName: 'Smriti Mandhana',
+    customerName: 'Samriti Mandhan',
     carName: 'Mustang Shelby GT',
     pickupDate: '2026-06-10',
     returnDate: '2026-06-14',
@@ -166,7 +166,7 @@ export const recentActivityData = [
   {
     id: 'act-2',
     type: 'payment_received',
-    text: 'Payment of ₹18,592 received from Smriti Mandhana (B-1028)',
+    text: 'Payment of ₹18,592 received from Samriti Mandhan (B-1028)',
     time: '2 hours ago',
     icon: 'fa-receipt',
     badgeClass: 'bg-success-subtle text-success',
@@ -396,8 +396,8 @@ export const initialCustomersData = [
   },
   {
     id: 'cust-2',
-    name: 'Smriti Mandhana',
-    email: 'smriti.mandhana@gmail.com',
+    name: 'Samriti Mandhan',
+    email: 'samriti.mandhan@gmail.com',
     phone: '+1 (555) 045-8822',
     totalBookings: 12,
     totalSpent: 147740,
@@ -445,7 +445,7 @@ export const initialPaymentsData = [
   {
     id: 'pay-1',
     invoiceId: 'INV-2026-042',
-    customerName: 'Smriti Mandhana',
+    customerName: 'Samriti Mandhan',
     amount: 18592,
     date: '2026-06-13',
     method: 'Credit Card',
@@ -509,7 +509,7 @@ export const reviewsData = [
   },
   {
     id: 'rev-2',
-    customerName: 'Smriti Mandhana',
+    customerName: 'Samriti Mandhan',
     rating: 4,
     comment: 'Great service. The Audi R8 was a blast to drive. Only complaint is the tire pressure was slightly low, but fixed immediately by support.',
     date: '2026-06-09',

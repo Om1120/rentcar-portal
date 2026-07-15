@@ -47,7 +47,7 @@ function Testimonials() {
                   className="testimonial-img mb-3"
                 />
                 <div>
-                  <h5 className="fw-bold mb-0">Smriti Mandhana</h5>
+                  <h5 className="fw-bold mb-0">Samriti Mandhan</h5>
                 </div>
               </div>
               <p className="text-muted fst-italic mb-0">
