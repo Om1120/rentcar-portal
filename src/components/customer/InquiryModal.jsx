@@ -220,9 +220,9 @@ const TextArea = styled.textarea`
   }
 `;
 
-function InquiryModal({ car, isOpen, onClose, onSubmit }) {
+function InquiryModal({ car, isOpen, onClose, onSubmit, defaultEmail = '' }) {
   const [customerName, setCustomerName] = useState('');
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(defaultEmail);
   const [phone, setPhone] = useState('');
   const [pickupDate, setPickupDate] = useState('');
   const [durationDays, setDurationDays] = useState(3);

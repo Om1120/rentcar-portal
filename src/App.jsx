@@ -29,6 +29,7 @@ import AboutPage from './pages/customer/About.jsx';
 import ReviewsPage from './pages/customer/Reviews.jsx';
 import ContactPage from './pages/customer/Contact.jsx';
 import InquiryModal from './components/customer/InquiryModal.jsx';
+import CustomerLoginModal from './components/customer/CustomerLoginModal.jsx';
 
 import car1 from './assets/car1.png';
 import car2 from './assets/car2.png';
@@ -88,6 +89,15 @@ function App() {
   const darkMode = true;
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileSidebarShow, setMobileSidebarShow] = useState(false);
+  
+  const [isCustomerAuthenticated, setIsCustomerAuthenticated] = useState(() => {
+    return localStorage.getItem('isCustomerAuthenticated') === 'true';
+  });
+  const [customerEmail, setCustomerEmail] = useState(() => {
+    return localStorage.getItem('customerEmail') || '';
+  });
+  const [isCustomerLoginOpen, setIsCustomerLoginOpen] = useState(false);
+  const [pendingCarRent, setPendingCarRent] = useState(null);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(() => {
     return localStorage.getItem('isAdminAuthenticated') === 'true';
   });
@@ -519,8 +529,28 @@ function App() {
       toast.error(`${car.name} is currently not available for rent.`);
       return;
     }
-    setInquiryCar(car);
-    setIsInquiryOpen(true);
+    
+    if (isCustomerAuthenticated) {
+      setInquiryCar(car);
+      setIsInquiryOpen(true);
+    } else {
+      setPendingCarRent(car);
+      setIsCustomerLoginOpen(true);
+    }
+  };
+
+  const handleCustomerLoginSuccess = (email) => {
+    localStorage.setItem('isCustomerAuthenticated', 'true');
+    localStorage.setItem('customerEmail', email);
+    setIsCustomerAuthenticated(true);
+    setCustomerEmail(email);
+    setIsCustomerLoginOpen(false);
+    
+    if (pendingCarRent) {
+      setInquiryCar(pendingCarRent);
+      setIsInquiryOpen(true);
+      setPendingCarRent(null);
+    }
   };
 
   const handleInquirySubmit = (inquiryData) => {
@@ -677,6 +707,10 @@ function App() {
         isInquiryOpen={isInquiryOpen}
         setIsInquiryOpen={setIsInquiryOpen}
         onInquirySubmit={handleInquirySubmit}
+        customerEmail={customerEmail}
+        isCustomerLoginOpen={isCustomerLoginOpen}
+        setIsCustomerLoginOpen={setIsCustomerLoginOpen}
+        onCustomerLoginSuccess={handleCustomerLoginSuccess}
       />
     </Router>
   );
@@ -739,7 +773,11 @@ function AppContent({
   inquiryCar,
   isInquiryOpen,
   setIsInquiryOpen,
-  onInquirySubmit
+  onInquirySubmit,
+  customerEmail,
+  isCustomerLoginOpen,
+  setIsCustomerLoginOpen,
+  onCustomerLoginSuccess
 }) {
   const location = useLocation();
   const navigate = useNavigate();
@@ -1349,6 +1387,13 @@ function AppContent({
         isOpen={isInquiryOpen}
         onClose={() => setIsInquiryOpen(false)}
         onSubmit={onInquirySubmit}
+        defaultEmail={customerEmail}
+      />
+
+      <CustomerLoginModal
+        isOpen={isCustomerLoginOpen}
+        onClose={() => setIsCustomerLoginOpen(false)}
+        onLoginSuccess={onCustomerLoginSuccess}
       />
 
       <ToastContainer 
