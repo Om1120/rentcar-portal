@@ -85,70 +85,96 @@ import {
   adminSettingsData
 } from './data/mockData';
 
+const safeGetItem = (key, fallback) => {
+  try {
+    const saved = localStorage.getItem(key);
+    if (!saved) return fallback;
+    try {
+      return JSON.parse(saved);
+    } catch {
+      return saved;
+    }
+  } catch (e) {
+    console.warn(`LocalStorage read failed for key "${key}":`, e);
+    return fallback;
+  }
+};
+
+const safeSetItem = (key, value) => {
+  try {
+    const stringValue = typeof value === 'string' ? value : JSON.stringify(value);
+    localStorage.setItem(key, stringValue);
+  } catch (e) {
+    console.warn(`LocalStorage write failed for key "${key}":`, e);
+  }
+};
+
+const safeRemoveItem = (key) => {
+  try {
+    localStorage.removeItem(key);
+  } catch (e) {
+    console.warn(`LocalStorage remove failed for key "${key}":`, e);
+  }
+};
+
 function App() {
   const darkMode = true;
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileSidebarShow, setMobileSidebarShow] = useState(false);
   
   const [isCustomerAuthenticated, setIsCustomerAuthenticated] = useState(() => {
-    return localStorage.getItem('isCustomerAuthenticated') === 'true';
+    return safeGetItem('isCustomerAuthenticated', 'false') === 'true';
   });
   const [customerEmail, setCustomerEmail] = useState(() => {
-    return localStorage.getItem('customerEmail') || '';
+    return safeGetItem('customerEmail', '');
   });
   const [isCustomerLoginOpen, setIsCustomerLoginOpen] = useState(false);
   const [pendingCarRent, setPendingCarRent] = useState(null);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(() => {
-    return localStorage.getItem('isAdminAuthenticated') === 'true';
+    return safeGetItem('isAdminAuthenticated', 'false') === 'true';
   });
 
   const [carsList, setCarsList] = useState(() => {
-    const saved = localStorage.getItem('carsList');
-    return saved ? JSON.parse(saved) : initialCarsData;
+    return safeGetItem('carsList', initialCarsData);
   });
   const [bookingsList, setBookingsList] = useState(() => {
-    const saved = localStorage.getItem('bookingsList');
-    return saved ? JSON.parse(saved) : recentBookingsData;
+    return safeGetItem('bookingsList', recentBookingsData);
   });
   const [customersList, setCustomersList] = useState(() => {
-    const saved = localStorage.getItem('customersList');
-    return saved ? JSON.parse(saved) : initialCustomersData;
+    return safeGetItem('customersList', initialCustomersData);
   });
   const [paymentsList, setPaymentsList] = useState(() => {
-    const saved = localStorage.getItem('paymentsList');
-    return saved ? JSON.parse(saved) : initialPaymentsData;
+    return safeGetItem('paymentsList', initialPaymentsData);
   });
   const [reviewsList, setReviewsList] = useState(() => {
-    const saved = localStorage.getItem('reviewsList');
-    return saved ? JSON.parse(saved) : reviewsData;
+    return safeGetItem('reviewsList', reviewsData);
   });
   const [adminSettings, setAdminSettings] = useState(() => {
-    const saved = localStorage.getItem('adminSettings');
-    return saved ? JSON.parse(saved) : adminSettingsData;
+    return safeGetItem('adminSettings', adminSettingsData);
   });
 
   useEffect(() => {
-    localStorage.setItem('carsList', JSON.stringify(carsList));
+    safeSetItem('carsList', carsList);
   }, [carsList]);
 
   useEffect(() => {
-    localStorage.setItem('bookingsList', JSON.stringify(bookingsList));
+    safeSetItem('bookingsList', bookingsList);
   }, [bookingsList]);
 
   useEffect(() => {
-    localStorage.setItem('customersList', JSON.stringify(customersList));
+    safeSetItem('customersList', customersList);
   }, [customersList]);
 
   useEffect(() => {
-    localStorage.setItem('paymentsList', JSON.stringify(paymentsList));
+    safeSetItem('paymentsList', paymentsList);
   }, [paymentsList]);
 
   useEffect(() => {
-    localStorage.setItem('reviewsList', JSON.stringify(reviewsList));
+    safeSetItem('reviewsList', reviewsList);
   }, [reviewsList]);
 
   useEffect(() => {
-    localStorage.setItem('adminSettings', JSON.stringify(adminSettings));
+    safeSetItem('adminSettings', adminSettings);
   }, [adminSettings]);
 
   // Tab state synchronization via localStorage storage event
@@ -504,12 +530,12 @@ function App() {
   };
 
   const handleResetSystemData = () => {
-    localStorage.removeItem('carsList');
-    localStorage.removeItem('bookingsList');
-    localStorage.removeItem('customersList');
-    localStorage.removeItem('paymentsList');
-    localStorage.removeItem('reviewsList');
-    localStorage.removeItem('adminSettings');
+    safeRemoveItem('carsList');
+    safeRemoveItem('bookingsList');
+    safeRemoveItem('customersList');
+    safeRemoveItem('paymentsList');
+    safeRemoveItem('reviewsList');
+    safeRemoveItem('adminSettings');
     
     setCarsList(initialCarsData);
     setBookingsList(recentBookingsData);
@@ -540,8 +566,8 @@ function App() {
   };
 
   const handleCustomerLoginSuccess = (email) => {
-    localStorage.setItem('isCustomerAuthenticated', 'true');
-    localStorage.setItem('customerEmail', email);
+    safeSetItem('isCustomerAuthenticated', 'true');
+    safeSetItem('customerEmail', email);
     setIsCustomerAuthenticated(true);
     setCustomerEmail(email);
     setIsCustomerLoginOpen(false);
@@ -809,7 +835,7 @@ function AppContent({
               onToggleMobileSidebar={handleToggleMobileSidebar}
               onLogout={() => {
                 setIsAdminAuthenticated(false);
-                localStorage.removeItem('isAdminAuthenticated');
+                safeRemoveItem('isAdminAuthenticated');
                 toast.info("Logged out successfully.");
                 navigate('/');
               }}
