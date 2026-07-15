@@ -34,3 +34,6 @@ A full-featured car rental application containing both a consumer vehicle browsi
    ```bash
    npm run dev
    ```
+
+## Deployment
+This project is automatically deployed on Vercel: [https://rentcar-orcin.vercel.app](https://rentcar-orcin.vercel.app)
