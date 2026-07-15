@@ -72,7 +72,7 @@ const CaptionTitle = styled.h2`
   letter-spacing: -1px;
   text-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
   
-  @media (max-width: 767.98px) {
+  .screen-max-767 & {
     font-size: 2.2rem;
   }
 `;
@@ -120,12 +120,12 @@ const Grid = styled.div`
   grid-template-columns: repeat(3, 1fr);
   gap: 30px;
   
-  @media (max-width: 991.98px) {
+  .screen-max-992 & {
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
   }
   
-  @media (max-width: 575.98px) {
+  .screen-max-575 & {
     grid-template-columns: 1fr;
   }
 `;
@@ -135,12 +135,12 @@ const FeaturesGrid = styled.div`
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
   
-  @media (max-width: 991.98px) {
+  .screen-max-992 & {
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
   }
   
-  @media (max-width: 575.98px) {
+  .screen-max-575 & {
     grid-template-columns: 1fr;
   }
 `;
@@ -151,15 +151,15 @@ const StatsGrid = styled.div`
   gap: 20px;
   margin-bottom: 3rem;
   
-  @media (max-width: 991.98px) {
+  .screen-max-992 & {
     grid-template-columns: repeat(3, 1fr);
   }
   
-  @media (max-width: 767.98px) {
+  .screen-max-767 & {
     grid-template-columns: repeat(2, 1fr);
   }
   
-  @media (max-width: 480px) {
+  .screen-max-480 & {
     grid-template-columns: 1fr;
   }
 `;
@@ -169,7 +169,7 @@ const ChartsGrid = styled.div`
   grid-template-columns: 1fr 1.5fr;
   gap: 30px;
   
-  @media (max-width: 991.98px) {
+  .screen-max-992 & {
     grid-template-columns: 1fr;
   }
 `;

@@ -154,6 +154,48 @@ function App() {
   });
 
   useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      const docEl = document.documentElement;
+      
+      docEl.classList.toggle('screen-max-1600', width <= 1600);
+      docEl.classList.toggle('screen-min-1600', width > 1600);
+      docEl.classList.toggle('screen-max-1024', width <= 1024);
+      docEl.classList.toggle('screen-max-992', width <= 991.98);
+      docEl.classList.toggle('screen-min-992', width >= 992);
+      docEl.classList.toggle('screen-max-768', width <= 768);
+      docEl.classList.toggle('screen-max-767', width <= 767.98);
+      docEl.classList.toggle('screen-max-576', width <= 576);
+      docEl.classList.toggle('screen-max-575', width <= 575.98);
+      docEl.classList.toggle('screen-max-480', width <= 480);
+    };
+
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleThemeChange = (e) => {
+      document.documentElement.classList.toggle('theme-dark', e.matches);
+    };
+
+    handleResize();
+    document.documentElement.classList.toggle('theme-dark', mediaQuery.matches);
+
+    window.addEventListener('resize', handleResize);
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handleThemeChange);
+    } else {
+      mediaQuery.addListener(handleThemeChange);
+    }
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (mediaQuery.removeEventListener) {
+        mediaQuery.removeEventListener('change', handleThemeChange);
+      } else {
+        mediaQuery.removeListener(handleThemeChange);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     safeSetItem('carsList', carsList);
   }, [carsList]);
 

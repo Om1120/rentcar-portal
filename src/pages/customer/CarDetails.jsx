@@ -32,7 +32,7 @@ const DetailGrid = styled.div`
   gap: 60px;
   align-items: start;
 
-  @media (max-width: 991.98px) {
+  .screen-max-992 & {
     grid-template-columns: 1fr;
     gap: 30px;
   }
@@ -49,7 +49,7 @@ const ImageCard = styled.div`
   height: 450px;
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
 
-  @media (max-width: 575.98px) {
+  .screen-max-575 & {
     height: 300px;
     padding: 1rem;
   }
