@@ -121,7 +121,7 @@ function App() {
   const darkMode = true;
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileSidebarShow, setMobileSidebarShow] = useState(false);
-  
+
   const [isCustomerAuthenticated, setIsCustomerAuthenticated] = useState(() => {
     return safeGetItem('isCustomerAuthenticated', 'false') === 'true';
   });
@@ -157,7 +157,7 @@ function App() {
     const handleResize = () => {
       const width = window.innerWidth;
       const docEl = document.documentElement;
-      
+
       docEl.classList.toggle('screen-max-1600', width <= 1600);
       docEl.classList.toggle('screen-min-1600', width > 1600);
       docEl.classList.toggle('screen-max-1024', width <= 1024);
@@ -289,9 +289,9 @@ function App() {
       toast.error("Please fill in all required fields.");
       return;
     }
-    
+
     const imgUrl = localCarImages[parseInt(newCar.imageIndex || 0)].file;
-    
+
     const carObj = {
       id: `car-${Date.now()}`,
       name: newCar.name,
@@ -437,7 +437,7 @@ function App() {
     const returnDt = new Date(newBooking.returnDate);
     const timeDiff = Math.abs(returnDt - pickup);
     const days = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)) || 1;
-    
+
     const matchedCar = carsList.find(c => c.name === newBooking.carName);
     const dailyPrice = matchedCar ? matchedCar.pricePerDay : 3000;
     const computedPrice = days * dailyPrice;
@@ -480,7 +480,7 @@ function App() {
     if (!matchedBooking) return;
 
     setBookingsList(prevBookings => prevBookings.map(b => b.id === bookingId ? { ...b, status: newStatus } : b));
-    
+
     // Update payment status
     setPaymentsList(prevPayments => prevPayments.map(p => {
       if (p.id === `pay-${bookingId}`) {
@@ -516,7 +516,7 @@ function App() {
         return c;
       }));
     }
-    
+
     // Update car status accordingly
     if (newStatus === 'Confirmed') {
       setCarsList(prevCars => prevCars.map(c => c.name === matchedBooking.carName ? { ...c, status: 'Booked' } : c));
@@ -578,14 +578,14 @@ function App() {
     safeRemoveItem('paymentsList');
     safeRemoveItem('reviewsList');
     safeRemoveItem('adminSettings');
-    
+
     setCarsList(initialCarsData);
     setBookingsList(recentBookingsData);
     setCustomersList(initialCustomersData);
     setPaymentsList(initialPaymentsData);
     setReviewsList(reviewsData);
     setAdminSettings(adminSettingsData);
-    
+
     toast.warning("System database reset to initial defaults!", {
       position: "top-right",
       autoClose: 2000
@@ -597,7 +597,7 @@ function App() {
       toast.error(`${car.name} is currently not available for rent.`);
       return;
     }
-    
+
     if (isCustomerAuthenticated) {
       setInquiryCar(car);
       setIsInquiryOpen(true);
@@ -613,7 +613,7 @@ function App() {
     setIsCustomerAuthenticated(true);
     setCustomerEmail(email);
     setIsCustomerLoginOpen(false);
-    
+
     if (pendingCarRent) {
       setInquiryCar(pendingCarRent);
       setIsInquiryOpen(true);
@@ -627,7 +627,7 @@ function App() {
     const pickup = new Date(pickupDate);
     const returnDt = new Date(pickup);
     returnDt.setDate(pickup.getDate() + durationDays);
-    
+
     const totalAmount = car.pricePerDay * durationDays;
 
     const bookingObj = {
@@ -685,7 +685,7 @@ function App() {
     setPaymentsList(prevPayments => [paymentObj, ...prevPayments]);
     setBookingsList(prevBookings => [bookingObj, ...prevBookings]);
     setCarsList(prevCars => prevCars.map(c => c.id === car.id ? { ...c, status: 'Booked' } : c));
-    
+
     setIsInquiryOpen(false);
     setInquiryCar(null);
 
@@ -716,7 +716,7 @@ function App() {
 
   return (
     <Router>
-      <AppContent 
+      <AppContent
         darkMode={darkMode}
         sidebarCollapsed={sidebarCollapsed}
         mobileSidebarShow={mobileSidebarShow}
@@ -854,8 +854,8 @@ function AppContent({
   if (isAdminPath) {
     if (!isAdminAuthenticated) {
       return (
-        <AdminLogin 
-          onLoginSuccess={() => setIsAdminAuthenticated(true)} 
+        <AdminLogin
+          onLoginSuccess={() => setIsAdminAuthenticated(true)}
           darkMode={darkMode}
         />
       );
@@ -863,17 +863,17 @@ function AppContent({
     return (
       <div className="dashboard-app" data-theme={darkMode ? 'dark' : 'light'}>
         <div className="dashboard-layout">
-          
-          <Sidebar 
-            collapsed={sidebarCollapsed} 
+
+          <Sidebar
+            collapsed={sidebarCollapsed}
             toggleCollapsed={handleToggleSidebar}
             mobileShow={mobileSidebarShow}
             toggleMobileShow={handleToggleMobileSidebar}
           />
 
           <div className={`main-panel ${sidebarCollapsed ? 'expanded' : ''}`}>
-            
-            <Navbar 
+
+            <Navbar
               onToggleMobileSidebar={handleToggleMobileSidebar}
               onLogout={() => {
                 setIsAdminAuthenticated(false);
@@ -885,10 +885,10 @@ function AppContent({
 
             <main className="dashboard-content">
               <Routes>
-                <Route 
-                  path="/admin" 
+                <Route
+                  path="/admin"
                   element={
-                    <Dashboard 
+                    <Dashboard
                       onOpenAddCar={() => setIsAddCarOpen(true)}
                       onOpenCreateBooking={() => setIsCreateBookingOpen(true)}
                       onOpenAddCustomer={() => setIsAddCustomerOpen(true)}
@@ -897,56 +897,56 @@ function AppContent({
                       customersList={customersList}
                       paymentsList={paymentsList}
                     />
-                  } 
+                  }
                 />
-                <Route 
-                  path="/admin/cars" 
+                <Route
+                  path="/admin/cars"
                   element={
-                    <CarsAdmin 
-                      carsList={carsList} 
-                      onAddCar={() => setIsAddCarOpen(true)} 
+                    <CarsAdmin
+                      carsList={carsList}
+                      onAddCar={() => setIsAddCarOpen(true)}
                       onEditCar={handleOpenEditCar}
                       onDeleteCar={handleDeleteCar}
                     />
-                  } 
+                  }
                 />
-                <Route 
-                  path="/admin/bookings" 
+                <Route
+                  path="/admin/bookings"
                   element={
-                    <BookingsAdmin 
-                      bookingsList={bookingsList} 
-                      onOpenCreateBooking={() => setIsCreateBookingOpen(true)} 
+                    <BookingsAdmin
+                      bookingsList={bookingsList}
+                      onOpenCreateBooking={() => setIsCreateBookingOpen(true)}
                       onUpdateBookingStatus={onUpdateBookingStatus}
                       onDeleteBooking={onDeleteBooking}
                     />
-                  } 
+                  }
                 />
-                <Route 
-                  path="/admin/customers" 
+                <Route
+                  path="/admin/customers"
                   element={
-                    <CustomersAdmin 
-                      customersList={customersList} 
-                      onOpenAddCustomer={() => setIsAddCustomerOpen(true)} 
+                    <CustomersAdmin
+                      customersList={customersList}
+                      onOpenAddCustomer={() => setIsAddCustomerOpen(true)}
                       onEditCustomer={handleOpenEditCustomer}
                       onDeleteCustomer={handleDeleteCustomer}
                     />
-                  } 
+                  }
                 />
-                <Route 
-                  path="/admin/payments" 
+                <Route
+                  path="/admin/payments"
                   element={
                     <PaymentsAdmin paymentsList={paymentsList} />
-                  } 
+                  }
                 />
                 <Route path="/admin/reports" element={<ReportsAdmin bookingsList={bookingsList} carsList={carsList} reviewsList={reviewsList} />} />
-                <Route 
-                  path="/admin/reviews" 
+                <Route
+                  path="/admin/reviews"
                   element={
-                    <ReviewsAdmin 
+                    <ReviewsAdmin
                       reviewsList={reviewsList}
                       onDeleteReview={handleDeleteReview}
                     />
-                  } 
+                  }
                 />
                 <Route path="/admin/settings" element={<SettingsAdmin onResetSystemData={onResetSystemData} />} />
               </Routes>
@@ -965,21 +965,21 @@ function AppContent({
                 <div className="modal-body text-start">
                   <div className="mb-3">
                     <label htmlFor="carName" className="form-label">Car Model Name *</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       id="carName"
-                      className="form-control" 
-                      placeholder="e.g. Tesla Model Y" 
+                      className="form-control"
+                      placeholder="e.g. Tesla Model Y"
                       value={newCar.name}
                       onChange={(e) => setNewCar({ ...newCar, name: e.target.value })}
                       required
                     />
                   </div>
-                  
+
                   <div className="row">
                     <div className="col-6 mb-3">
                       <label htmlFor="carType" className="form-label">Category</label>
-                      <select 
+                      <select
                         id="carType"
                         className="form-select"
                         value={newCar.type}
@@ -994,11 +994,11 @@ function AppContent({
                     </div>
                     <div className="col-6 mb-3">
                       <label htmlFor="carPrice" className="form-label">Price / Day (₹) *</label>
-                      <input 
-                        type="number" 
+                      <input
+                        type="number"
                         id="carPrice"
-                        className="form-control" 
-                        placeholder="e.g. 15000" 
+                        className="form-control"
+                        placeholder="e.g. 15000"
                         value={newCar.pricePerDay}
                         onChange={(e) => setNewCar({ ...newCar, pricePerDay: e.target.value })}
                         required
@@ -1009,7 +1009,7 @@ function AppContent({
                   <div className="row">
                     <div className="col-6 mb-3">
                       <label htmlFor="carFuel" className="form-label">Fuel Type</label>
-                      <select 
+                      <select
                         id="carFuel"
                         className="form-select"
                         value={newCar.fuel}
@@ -1023,7 +1023,7 @@ function AppContent({
                     </div>
                     <div className="col-6 mb-3">
                       <label htmlFor="carTransmission" className="form-label">Transmission</label>
-                      <select 
+                      <select
                         id="carTransmission"
                         className="form-select"
                         value={newCar.transmission}
@@ -1038,7 +1038,7 @@ function AppContent({
                   <div className="row">
                     <div className="col-6 mb-3">
                       <label htmlFor="carStatus" className="form-label">Status</label>
-                      <select 
+                      <select
                         id="carStatus"
                         className="form-select"
                         value={newCar.status}
@@ -1051,7 +1051,7 @@ function AppContent({
                     </div>
                     <div className="col-6 mb-3">
                       <label htmlFor="carImage" className="form-label">Select Car Image *</label>
-                      <select 
+                      <select
                         id="carImage"
                         className="form-select"
                         value={newCar.imageIndex}
@@ -1084,20 +1084,20 @@ function AppContent({
                 <div className="modal-body text-start">
                   <div className="mb-3">
                     <label htmlFor="editCarName" className="form-label">Car Model Name *</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       id="editCarName"
-                      className="form-control" 
+                      className="form-control"
                       value={editingCar.name}
                       onChange={(e) => setEditingCar({ ...editingCar, name: e.target.value })}
                       required
                     />
                   </div>
-                  
+
                   <div className="row">
                     <div className="col-6 mb-3">
                       <label htmlFor="editCarType" className="form-label">Category</label>
-                      <select 
+                      <select
                         id="editCarType"
                         className="form-select"
                         value={editingCar.type}
@@ -1112,10 +1112,10 @@ function AppContent({
                     </div>
                     <div className="col-6 mb-3">
                       <label htmlFor="editCarPrice" className="form-label">Price / Day (₹) *</label>
-                      <input 
-                        type="number" 
+                      <input
+                        type="number"
                         id="editCarPrice"
-                        className="form-control" 
+                        className="form-control"
                         value={editingCar.pricePerDay}
                         onChange={(e) => setEditingCar({ ...editingCar, pricePerDay: parseFloat(e.target.value) || 0 })}
                         required
@@ -1126,7 +1126,7 @@ function AppContent({
                   <div className="row">
                     <div className="col-6 mb-3">
                       <label htmlFor="editCarFuel" className="form-label">Fuel Type</label>
-                      <select 
+                      <select
                         id="editCarFuel"
                         className="form-select"
                         value={editingCar.fuel}
@@ -1140,7 +1140,7 @@ function AppContent({
                     </div>
                     <div className="col-6 mb-3">
                       <label htmlFor="editCarTransmission" className="form-label">Transmission</label>
-                      <select 
+                      <select
                         id="editCarTransmission"
                         className="form-select"
                         value={editingCar.transmission}
@@ -1155,7 +1155,7 @@ function AppContent({
                   <div className="row">
                     <div className="col-6 mb-3">
                       <label htmlFor="editCarStatus" className="form-label">Status</label>
-                      <select 
+                      <select
                         id="editCarStatus"
                         className="form-select"
                         value={editingCar.status}
@@ -1168,7 +1168,7 @@ function AppContent({
                     </div>
                     <div className="col-6 mb-3">
                       <label htmlFor="editCarImage" className="form-label">Select Car Image *</label>
-                      <select 
+                      <select
                         id="editCarImage"
                         className="form-select"
                         value={editingCar.imageIndex}
@@ -1201,11 +1201,11 @@ function AppContent({
                 <div className="modal-body text-start">
                   <div className="mb-3">
                     <label htmlFor="bkCust" className="form-label">Customer Name *</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       id="bkCust"
-                      className="form-control" 
-                      placeholder="e.g. Bruce Banner" 
+                      className="form-control"
+                      placeholder="e.g. Bruce Banner"
                       value={newBooking.customerName}
                       onChange={(e) => setNewBooking({ ...newBooking, customerName: e.target.value })}
                       required
@@ -1214,7 +1214,7 @@ function AppContent({
 
                   <div className="mb-3">
                     <label htmlFor="bkCar" className="form-label">Select Car *</label>
-                    <select 
+                    <select
                       id="bkCar"
                       className="form-select"
                       value={newBooking.carName}
@@ -1231,10 +1231,10 @@ function AppContent({
                   <div className="row">
                     <div className="col-6 mb-3">
                       <label htmlFor="bkPickup" className="form-label">Pickup Date *</label>
-                      <input 
-                        type="date" 
+                      <input
+                        type="date"
                         id="bkPickup"
-                        className="form-control" 
+                        className="form-control"
                         value={newBooking.pickupDate}
                         onChange={(e) => setNewBooking({ ...newBooking, pickupDate: e.target.value })}
                         required
@@ -1242,10 +1242,10 @@ function AppContent({
                     </div>
                     <div className="col-6 mb-3">
                       <label htmlFor="bkReturn" className="form-label">Return Date *</label>
-                      <input 
-                        type="date" 
+                      <input
+                        type="date"
                         id="bkReturn"
-                        className="form-control" 
+                        className="form-control"
                         value={newBooking.returnDate}
                         onChange={(e) => setNewBooking({ ...newBooking, returnDate: e.target.value })}
                         required
@@ -1255,7 +1255,7 @@ function AppContent({
 
                   <div className="mb-3">
                     <label htmlFor="bkStatus" className="form-label">Reservation Status</label>
-                    <select 
+                    <select
                       id="bkStatus"
                       className="form-select"
                       value={newBooking.status}
@@ -1288,11 +1288,11 @@ function AppContent({
                 <div className="modal-body text-start">
                   <div className="mb-3">
                     <label htmlFor="custName" className="form-label">Customer Name *</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       id="custName"
-                      className="form-control" 
-                      placeholder="e.g. Natasha Romanoff" 
+                      className="form-control"
+                      placeholder="e.g. Natasha Romanoff"
                       value={newCustomer.name}
                       onChange={(e) => setNewCustomer({ ...newCustomer, name: e.target.value })}
                       required
@@ -1301,11 +1301,11 @@ function AppContent({
 
                   <div className="mb-3">
                     <label htmlFor="custEmail" className="form-label">Email ID *</label>
-                    <input 
-                      type="email" 
+                    <input
+                      type="email"
                       id="custEmail"
-                      className="form-control" 
-                      placeholder="natasha@avengers.org" 
+                      className="form-control"
+                      placeholder="natasha@avengers.org"
                       value={newCustomer.email}
                       onChange={(e) => setNewCustomer({ ...newCustomer, email: e.target.value })}
                       required
@@ -1315,11 +1315,11 @@ function AppContent({
                   <div className="row">
                     <div className="col-6 mb-3">
                       <label htmlFor="custPhone" className="form-label">Phone Number *</label>
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         id="custPhone"
-                        className="form-control" 
-                        placeholder="+1 (555) 000-1111" 
+                        className="form-control"
+                        placeholder="+1 (555) 000-1111"
                         value={newCustomer.phone}
                         onChange={(e) => setNewCustomer({ ...newCustomer, phone: e.target.value })}
                         required
@@ -1327,11 +1327,11 @@ function AppContent({
                     </div>
                     <div className="col-6 mb-3">
                       <label htmlFor="custSpent" className="form-label">Initial Spent Amount (₹)</label>
-                      <input 
-                        type="number" 
+                      <input
+                        type="number"
                         id="custSpent"
-                        className="form-control" 
-                        placeholder="e.g. 120000" 
+                        className="form-control"
+                        placeholder="e.g. 120000"
                         value={newCustomer.initialSpent}
                         onChange={(e) => setNewCustomer({ ...newCustomer, initialSpent: e.target.value })}
                       />
@@ -1358,10 +1358,10 @@ function AppContent({
                 <div className="modal-body text-start">
                   <div className="mb-3">
                     <label htmlFor="editCustName" className="form-label">Customer Name *</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       id="editCustName"
-                      className="form-control" 
+                      className="form-control"
                       value={editingCustomer.name}
                       onChange={(e) => setEditingCustomer({ ...editingCustomer, name: e.target.value })}
                       required
@@ -1370,10 +1370,10 @@ function AppContent({
 
                   <div className="mb-3">
                     <label htmlFor="editCustEmail" className="form-label">Email ID *</label>
-                    <input 
-                      type="email" 
+                    <input
+                      type="email"
                       id="editCustEmail"
-                      className="form-control" 
+                      className="form-control"
                       value={editingCustomer.email}
                       onChange={(e) => setEditingCustomer({ ...editingCustomer, email: e.target.value })}
                       required
@@ -1383,10 +1383,10 @@ function AppContent({
                   <div className="row">
                     <div className="col-12 mb-3">
                       <label htmlFor="editCustPhone" className="form-label">Phone Number *</label>
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         id="editCustPhone"
-                        className="form-control" 
+                        className="form-control"
                         value={editingCustomer.phone}
                         onChange={(e) => setEditingCustomer({ ...editingCustomer, phone: e.target.value })}
                         required
@@ -1403,16 +1403,16 @@ function AppContent({
           </div>
         )}
 
-        <ToastContainer 
-          position="top-right" 
-          autoClose={3000} 
-          hideProgressBar={false} 
-          newestOnTop={false} 
-          closeOnClick 
-          rtl={false} 
-          pauseOnFocusLoss 
-          draggable 
-          pauseOnHover 
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
           theme={darkMode ? "dark" : "light"}
         />
       </div>
@@ -1450,7 +1450,7 @@ function AppContent({
 
       <CustomerFooter footer={adminSettings.footerContent} contact={adminSettings.contactInformation} websiteName={adminSettings.websiteName} />
 
-      <InquiryModal 
+      <InquiryModal
         car={inquiryCar}
         isOpen={isInquiryOpen}
         onClose={() => setIsInquiryOpen(false)}
@@ -1464,16 +1464,16 @@ function AppContent({
         onLoginSuccess={onCustomerLoginSuccess}
       />
 
-      <ToastContainer 
-        position="top-right" 
-        autoClose={3000} 
-        hideProgressBar={false} 
-        newestOnTop={false} 
-        closeOnClick 
-        rtl={false} 
-        pauseOnFocusLoss 
-        draggable 
-        pauseOnHover 
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
         theme="dark"
       />
     </div>
