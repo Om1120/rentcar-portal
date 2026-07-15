@@ -17,12 +17,7 @@ body {
 }
 
 #root {
-  width: 100% !important;
-  max-width: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  text-align: left !important;
-  border-inline: none !important;
+  text-align: left;
 }
 
 body {
@@ -510,4 +505,38 @@ span[style*="cursor: pointer"]:hover {
   .hero-section h1 {
     font-size: 4.5rem;
   }
+}
+
+/* Customer app styling overrides and helper rules */
+.customer-app {
+  background-color: var(--website-bg-dark) !important;
+  color: var(--website-text-main) !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+.customer-app h1,
+.customer-app h2,
+.customer-app h3,
+.customer-app h4,
+.customer-app h5,
+.customer-app h6 {
+  color: #ffffff !important;
+}
+
+.customer-app a {
+  color: var(--website-secondary);
+}
+
+.customer-app a:hover {
+  color: var(--website-primary);
+}
+
+/* Carousel customization */
+.customer-app .carousel-indicators [data-bs-target] {
+  background-color: var(--website-secondary);
+}
+
+.customer-app .carousel-control-prev-icon,
+.customer-app .carousel-control-next-icon {
+  filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.5));
 }

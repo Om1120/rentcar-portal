@@ -202,7 +202,7 @@ function App() {
       transmission: newCar.transmission
     };
 
-    setCarsList([carObj, ...carsList]);
+    setCarsList(prev => [carObj, ...prev]);
     setIsAddCarOpen(false);
     setNewCar({ name: '', type: 'Sedan', pricePerDay: '', year: 2024, fuel: 'Electric', transmission: 'Automatic', status: 'Available', imageIndex: 0 });
     toast.success(`Successfully added ${carObj.name} to fleet!`);
@@ -230,14 +230,14 @@ function App() {
       image: imgUrl
     };
 
-    setCarsList(carsList.map(car => car.id === editingCar.id ? updatedCar : car));
+    setCarsList(prev => prev.map(car => car.id === editingCar.id ? updatedCar : car));
     setIsEditCarOpen(false);
     toast.success(`Successfully updated vehicle: ${editingCar.name}`);
     setEditingCar(null);
   };
 
   const handleDeleteCar = (id, name) => {
-    setCarsList(carsList.filter(car => car.id !== id));
+    setCarsList(prev => prev.filter(car => car.id !== id));
     toast.error(`Deleted vehicle: ${name}`);
   };
 
@@ -260,7 +260,7 @@ function App() {
       avatar: randomAvatar
     };
 
-    setCustomersList([customerObj, ...customersList]);
+    setCustomersList(prev => [customerObj, ...prev]);
     setIsAddCustomerOpen(false);
     setNewCustomer({ name: '', email: '', phone: '', initialSpent: '' });
     toast.success(`Registered customer profile for ${customerObj.name}`);
@@ -278,48 +278,50 @@ function App() {
       return;
     }
 
-    setCustomersList(customersList.map(c => c.id === editingCustomer.id ? editingCustomer : c));
+    setCustomersList(prev => prev.map(c => c.id === editingCustomer.id ? editingCustomer : c));
     setIsEditCustomerOpen(false);
     toast.success(`Updated details for customer: ${editingCustomer.name}`);
     setEditingCustomer(null);
   };
 
   const handleDeleteCustomer = (id, name) => {
-    setCustomersList(customersList.filter(c => c.id !== id));
+    setCustomersList(prev => prev.filter(c => c.id !== id));
     toast.error(`Removed customer profile: ${name}`);
   };
 
   const handleDeleteReview = (id, customerName) => {
-    setReviewsList(reviewsList.filter(r => r.id !== id));
+    setReviewsList(prev => prev.filter(r => r.id !== id));
     toast.error(`Review by ${customerName} has been deleted.`);
   };
 
   const upsertCustomerForBooking = (customerName, amount, isConfirmedOrCompleted) => {
-    const exists = customersList.find(c => c.name.toLowerCase() === customerName.toLowerCase());
-    if (exists) {
-      setCustomersList(prevList => prevList.map(c => {
-        if (c.name.toLowerCase() === customerName.toLowerCase()) {
-          return {
-            ...c,
-            totalBookings: c.totalBookings + 1,
-            totalSpent: c.totalSpent + (isConfirmedOrCompleted ? amount : 0)
-          };
-        }
-        return c;
-      }));
-    } else {
-      const randomAvatar = localAvatars[Math.floor(Math.random() * localAvatars.length)];
-      const customerObj = {
-        id: `cust-${Date.now()}`,
-        name: customerName,
-        email: `${customerName.toLowerCase().replace(/\s+/g, '')}@gmail.com`,
-        phone: `+91 ${Math.floor(60000 + Math.random() * 39999)} ${Math.floor(10000 + Math.random() * 89999)}`,
-        totalBookings: 1,
-        totalSpent: isConfirmedOrCompleted ? amount : 0,
-        avatar: randomAvatar
-      };
-      setCustomersList(prevList => [customerObj, ...prevList]);
-    }
+    setCustomersList(prevList => {
+      const exists = prevList.some(c => c.name.toLowerCase() === customerName.toLowerCase());
+      if (exists) {
+        return prevList.map(c => {
+          if (c.name.toLowerCase() === customerName.toLowerCase()) {
+            return {
+              ...c,
+              totalBookings: c.totalBookings + 1,
+              totalSpent: c.totalSpent + (isConfirmedOrCompleted ? amount : 0)
+            };
+          }
+          return c;
+        });
+      } else {
+        const randomAvatar = localAvatars[Math.floor(Math.random() * localAvatars.length)];
+        const customerObj = {
+          id: `cust-${Date.now()}`,
+          name: customerName,
+          email: `${customerName.toLowerCase().replace(/\s+/g, '')}@gmail.com`,
+          phone: `+91 ${Math.floor(60000 + Math.random() * 39999)} ${Math.floor(10000 + Math.random() * 89999)}`,
+          totalBookings: 1,
+          totalSpent: isConfirmedOrCompleted ? amount : 0,
+          avatar: randomAvatar
+        };
+        return [customerObj, ...prevList];
+      }
+    });
   };
 
   const handleCreateBookingSubmit = (e) => {
@@ -349,7 +351,7 @@ function App() {
     };
 
     if (newBooking.status === 'Confirmed' || newBooking.status === 'Completed') {
-      setCarsList(carsList.map(c => c.name === newBooking.carName ? { ...c, status: 'Booked' } : c));
+      setCarsList(prev => prev.map(c => c.name === newBooking.carName ? { ...c, status: 'Booked' } : c));
     }
 
     // Add payment record
@@ -365,7 +367,7 @@ function App() {
 
     setPaymentsList(prevPayments => [paymentObj, ...prevPayments]);
     upsertCustomerForBooking(bookingObj.customerName, computedPrice, bookingObj.status === 'Confirmed' || bookingObj.status === 'Completed');
-    setBookingsList([bookingObj, ...bookingsList]);
+    setBookingsList(prev => [bookingObj, ...prev]);
     setIsCreateBookingOpen(false);
     setNewBooking({ customerName: '', carName: '', pickupDate: '', returnDate: '', price: '', status: 'Pending' });
     toast.success(`Created reservation for ${bookingObj.customerName}!`);
@@ -531,30 +533,32 @@ function App() {
     };
 
     // Upsert customer profile
-    const exists = customersList.find(c => c.email.toLowerCase() === email.toLowerCase());
-    if (!exists) {
-      const randomAvatar = localAvatars[Math.floor(Math.random() * localAvatars.length)];
-      const customerObj = {
-        id: `cust-${Date.now()}`,
-        name: customerName,
-        email: email,
-        phone: phone,
-        totalBookings: 1,
-        totalSpent: 0,
-        avatar: randomAvatar
-      };
-      setCustomersList(prevCustomers => [customerObj, ...prevCustomers]);
-    } else {
-      setCustomersList(prevList => prevList.map(c => {
-        if (c.email.toLowerCase() === email.toLowerCase()) {
-          return {
-            ...c,
-            totalBookings: c.totalBookings + 1
-          };
-        }
-        return c;
-      }));
-    }
+    setCustomersList(prevCustomers => {
+      const exists = prevCustomers.some(c => c.email.toLowerCase() === email.toLowerCase());
+      if (!exists) {
+        const randomAvatar = localAvatars[Math.floor(Math.random() * localAvatars.length)];
+        const customerObj = {
+          id: `cust-${Date.now()}`,
+          name: customerName,
+          email: email,
+          phone: phone,
+          totalBookings: 1,
+          totalSpent: 0,
+          avatar: randomAvatar
+        };
+        return [customerObj, ...prevCustomers];
+      } else {
+        return prevCustomers.map(c => {
+          if (c.email.toLowerCase() === email.toLowerCase()) {
+            return {
+              ...c,
+              totalBookings: c.totalBookings + 1
+            };
+          }
+          return c;
+        });
+      }
+    });
 
     setPaymentsList(prevPayments => [paymentObj, ...prevPayments]);
     setBookingsList(prevBookings => [bookingObj, ...prevBookings]);
@@ -570,19 +574,22 @@ function App() {
   };
 
   const handleContactSubmit = (inquiry) => {
-    const exists = customersList.find(c => c.email.toLowerCase() === inquiry.email.toLowerCase());
-    if (!exists) {
-      const newCustomerObj = {
-        id: `cust-${Date.now()}`,
-        name: inquiry.name,
-        email: inquiry.email,
-        phone: inquiry.phone,
-        totalBookings: 0,
-        totalSpent: 0,
-        avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(inquiry.name)}&background=7C3AED&color=fff`
-      };
-      setCustomersList(prevCustomers => [newCustomerObj, ...prevCustomers]);
-    }
+    setCustomersList(prevCustomers => {
+      const exists = prevCustomers.some(c => c.email.toLowerCase() === inquiry.email.toLowerCase());
+      if (!exists) {
+        const newCustomerObj = {
+          id: `cust-${Date.now()}`,
+          name: inquiry.name,
+          email: inquiry.email,
+          phone: inquiry.phone,
+          totalBookings: 0,
+          totalSpent: 0,
+          avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(inquiry.name)}&background=7C3AED&color=fff`
+        };
+        return [newCustomerObj, ...prevCustomers];
+      }
+      return prevCustomers;
+    });
   };
 
   return (
@@ -1286,48 +1293,19 @@ function AppContent({
 
   // Customer website output
   return (
-    <div className="customer-app" style={{ background: 'var(--website-bg-dark, #0B0F19)', color: '#ffffff', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <style>
-        {`
-          :root {
-            --website-primary: ${adminSettings.themeColors.primary};
-            --website-secondary: ${adminSettings.themeColors.secondary};
-            --website-bg-dark: ${adminSettings.themeColors.bgDark};
-            --website-bg-light: ${adminSettings.themeColors.bgLight};
-            --website-card-bg: ${adminSettings.themeColors.cardDark};
-            --website-text-main: ${adminSettings.themeColors.textDark};
-          }
-          
-          /* Customer overrides */
-          .customer-app {
-            background-color: var(--website-bg-dark) !important;
-            color: var(--website-text-main) !important;
-            font-family: 'Inter', sans-serif !important;
-          }
-          
-          .customer-app h1, .customer-app h2, .customer-app h3, .customer-app h4, .customer-app h5, .customer-app h6 {
-            color: #ffffff !important;
-          }
-          
-          .customer-app a {
-            color: var(--website-secondary);
-          }
-          
-          .customer-app a:hover {
-            color: var(--website-primary);
-          }
-          
-          /* Carousel customization */
-          .customer-app .carousel-indicators [data-bs-target] {
-            background-color: var(--website-secondary);
-          }
-          
-          .customer-app .carousel-control-prev-icon,
-          .customer-app .carousel-control-next-icon {
-            filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.5));
-          }
-        `}
-      </style>
+    <div className="customer-app" style={{
+      background: 'var(--website-bg-dark, #0B0F19)',
+      color: '#ffffff',
+      minHeight: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      '--website-primary': adminSettings.themeColors.primary,
+      '--website-secondary': adminSettings.themeColors.secondary,
+      '--website-bg-dark': adminSettings.themeColors.bgDark,
+      '--website-bg-light': adminSettings.themeColors.bgLight,
+      '--website-card-bg': adminSettings.themeColors.cardDark,
+      '--website-text-main': adminSettings.themeColors.textDark
+    }}>
 
       <CustomerNavbar websiteName={adminSettings.websiteName} />
 

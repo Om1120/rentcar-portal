@@ -177,8 +177,8 @@ function Contact({ contact, onContactSubmit }) {
     }
     if (!formData.phone.trim()) {
       tempErrors.phone = 'Phone number is required';
-    } else if (!/^[0-9]{10}$/.test(formData.phone.replace(/[\s().+-]/g, ''))) {
-      tempErrors.phone = 'Please enter a valid 10-digit phone number';
+    } else if (!/^[0-9]{10,13}$/.test(formData.phone.replace(/[\s().+-]/g, ''))) {
+      tempErrors.phone = 'Please enter a valid phone number';
     }
     if (!formData.message.trim()) tempErrors.message = 'Message is required';
     

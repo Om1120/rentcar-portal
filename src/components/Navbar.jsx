@@ -30,6 +30,16 @@ function Navbar({ darkMode, onToggleTheme, onLogout, onToggleMobileSidebar }) {
         </button>
 
         <button 
+          className="nav-icon-btn text-muted" 
+          onClick={onToggleTheme} 
+          aria-label="Toggle Theme"
+          style={{ cursor: 'pointer' }}
+          title={darkMode ? "Switch to Light Theme" : "Switch to Dark Theme"}
+        >
+          <i className={`fas ${darkMode ? 'fa-sun' : 'fa-moon'}`}></i>
+        </button>
+
+        <button 
           className="nav-icon-btn text-danger" 
           onClick={onLogout} 
           aria-label="Sign Out"

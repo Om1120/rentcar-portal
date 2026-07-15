@@ -1,8 +1,7 @@
 /* src/styles/dashboard.css */
 
-/* Core Variable System */
+/* Core Variable System - Default Dark Theme */
 .dashboard-app,
-.dashboard-app[data-theme='light'],
 .dashboard-app[data-theme='dark'] {
   --bg-app: #0f172a;
   --bg-card: #1e293b;
@@ -28,6 +27,34 @@
   --warning: #F59E0B;
   --danger: #EF4444;
   --hover-glow: rgba(124, 58, 237, 0.35);
+}
+
+/* Light Theme Variables */
+.dashboard-app[data-theme='light'] {
+  --bg-app: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-sidebar: #0f172a;    /* Keep sidebar dark for elegant premium contrast */
+  --sidebar-text: #94a3b8;
+  --sidebar-text-active: #06b6d4;
+  --sidebar-hover-bg: rgba(124, 58, 237, 0.08);
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+  --card-border: rgba(124, 58, 237, 0.1);
+  --glass-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+  --glass-blur: blur(20px) saturate(180%);
+  --navbar-bg: rgba(248, 250, 252, 0.8);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.05);
+  --table-hover: rgba(15, 23, 42, 0.02);
+
+  /* Accent colors remains consistent for brand identity */
+  --primary: #7C3AED;
+  --secondary: #06B6D4;
+  --success: #16a34a;
+  --warning: #d97706;
+  --danger: #dc2626;
+  --hover-glow: rgba(124, 58, 237, 0.15);
 }
 
 
