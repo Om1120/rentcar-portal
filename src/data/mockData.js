@@ -592,3 +592,47 @@ export const adminSettingsData = {
   }
 };
 
+export const initialEmployeesData = [
+  {
+    id: 'emp-1',
+    name: 'Aarav Mehta',
+    email: 'aarav.mehta@drivex.com',
+    phone: '+91 98765 12345',
+    role: 'Fleet Manager',
+    status: 'Active',
+    joiningDate: '2024-01-10',
+    avatar: 'https://ui-avatars.com/api/?name=Aarav+Mehta&background=7C3AED&color=fff',
+  },
+  {
+    id: 'emp-2',
+    name: 'Ananya Sharma',
+    email: 'ananya.sharma@drivex.com',
+    phone: '+91 87654 23456',
+    role: 'Customer Support',
+    status: 'Active',
+    joiningDate: '2024-03-15',
+    avatar: 'https://ui-avatars.com/api/?name=Ananya+Sharma&background=06B6D4&color=fff',
+  },
+  {
+    id: 'emp-3',
+    name: 'Kabir Singh',
+    email: 'kabir.singh@drivex.com',
+    phone: '+91 76543 34567',
+    role: 'Sales Consultant',
+    status: 'On Leave',
+    joiningDate: '2024-06-01',
+    avatar: 'https://ui-avatars.com/api/?name=Kabir+Singh&background=3B82F6&color=fff',
+  },
+  {
+    id: 'emp-4',
+    name: 'Pooja Patel',
+    email: 'pooja.patel@drivex.com',
+    phone: '+91 65432 45678',
+    role: 'Operations Lead',
+    status: 'Active',
+    joiningDate: '2023-11-20',
+    avatar: 'https://ui-avatars.com/api/?name=Pooja+Patel&background=8B5CF6&color=fff',
+  }
+];
+
+

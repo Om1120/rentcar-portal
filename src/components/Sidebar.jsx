@@ -9,6 +9,7 @@ function Sidebar({ collapsed, toggleCollapsed, mobileShow, toggleMobileShow }) {
     { name: 'Cars', path: '/admin/cars', icon: 'fa-car' },
     { name: 'Bookings', path: '/admin/bookings', icon: 'fa-calendar-check' },
     { name: 'Customers', path: '/admin/customers', icon: 'fa-users' },
+    { name: 'Employees', path: '/admin/employees', icon: 'fa-user-tie' },
     { name: 'Payments', path: '/admin/payments', icon: 'fa-credit-card' },
     { name: 'Reports', path: '/admin/reports', icon: 'fa-chart-bar' },
     { name: 'Reviews', path: '/admin/reviews', icon: 'fa-star' },

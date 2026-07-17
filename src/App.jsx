@@ -13,6 +13,7 @@ import Dashboard from './pages/Dashboard.jsx';
 import CarsAdmin from './pages/Cars.jsx';
 import BookingsAdmin from './pages/Bookings.jsx';
 import CustomersAdmin from './pages/Customers.jsx';
+import EmployeesAdmin from './pages/Employees.jsx';
 import PaymentsAdmin from './pages/Payments.jsx';
 import ReportsAdmin from './pages/Reports.jsx';
 import ReviewsAdmin from './pages/Reviews.jsx';
@@ -80,6 +81,7 @@ import {
   initialCarsData,
   recentBookingsData,
   initialCustomersData,
+  initialEmployeesData,
   initialPaymentsData,
   reviewsData,
   adminSettingsData
@@ -143,6 +145,9 @@ function App() {
   const [customersList, setCustomersList] = useState(() => {
     return safeGetItem('customersList', initialCustomersData);
   });
+  const [employeesList, setEmployeesList] = useState(() => {
+    return safeGetItem('employeesList', initialEmployeesData);
+  });
   const [paymentsList, setPaymentsList] = useState(() => {
     return safeGetItem('paymentsList', initialPaymentsData);
   });
@@ -189,6 +194,10 @@ function App() {
   }, [customersList]);
 
   useEffect(() => {
+    safeSetItem('employeesList', employeesList);
+  }, [employeesList]);
+
+  useEffect(() => {
     safeSetItem('paymentsList', paymentsList);
   }, [paymentsList]);
 
@@ -212,6 +221,9 @@ function App() {
         }
         if (e.key === 'customersList' && e.newValue) {
           setCustomersList(JSON.parse(e.newValue));
+        }
+        if (e.key === 'employeesList' && e.newValue) {
+          setEmployeesList(JSON.parse(e.newValue));
         }
         if (e.key === 'paymentsList' && e.newValue) {
           setPaymentsList(JSON.parse(e.newValue));
@@ -238,9 +250,12 @@ function App() {
   const [isCreateBookingOpen, setIsCreateBookingOpen] = useState(false);
   const [isAddCustomerOpen, setIsAddCustomerOpen] = useState(false);
   const [isEditCustomerOpen, setIsEditCustomerOpen] = useState(false);
+  const [isAddEmployeeOpen, setIsAddEmployeeOpen] = useState(false);
+  const [isEditEmployeeOpen, setIsEditEmployeeOpen] = useState(false);
 
   const [editingCar, setEditingCar] = useState(null);
   const [editingCustomer, setEditingCustomer] = useState(null);
+  const [editingEmployee, setEditingEmployee] = useState(null);
 
   const [newCar, setNewCar] = useState({
     name: '', type: 'Sedan', pricePerDay: '', year: 2024, fuel: 'Electric', transmission: 'Automatic', status: 'Available', imageIndex: 0
@@ -252,6 +267,10 @@ function App() {
 
   const [newCustomer, setNewCustomer] = useState({
     name: '', email: '', phone: '', initialSpent: ''
+  });
+
+  const [newEmployee, setNewEmployee] = useState({
+    name: '', email: '', phone: '', role: 'Customer Support', status: 'Active', joiningDate: new Date().toISOString().split('T')[0]
   });
 
 
@@ -370,6 +389,59 @@ function App() {
   const handleDeleteCustomer = (id, name) => {
     setCustomersList(prev => prev.filter(c => c.id !== id));
     toast.error(`Removed customer profile: ${name}`);
+  };
+
+  const handleAddEmployeeSubmit = (e) => {
+    e.preventDefault();
+    if (!newEmployee.name || !newEmployee.email || !newEmployee.phone) {
+      toast.error("Name, Email and Phone are required.");
+      return;
+    }
+
+    const employeeObj = {
+      id: `emp-${Date.now()}`,
+      name: newEmployee.name,
+      email: newEmployee.email,
+      phone: newEmployee.phone,
+      role: newEmployee.role,
+      status: newEmployee.status,
+      joiningDate: newEmployee.joiningDate || new Date().toISOString().split('T')[0],
+      avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(newEmployee.name)}&background=7C3AED&color=fff`
+    };
+
+    setEmployeesList(prev => [employeeObj, ...prev]);
+    setIsAddEmployeeOpen(false);
+    setNewEmployee({ name: '', email: '', phone: '', role: 'Customer Support', status: 'Active', joiningDate: new Date().toISOString().split('T')[0] });
+    toast.success(`Successfully added employee: ${employeeObj.name}`);
+  };
+
+  const handleOpenEditEmployee = (employee) => {
+    setEditingEmployee(employee);
+    setIsEditEmployeeOpen(true);
+  };
+
+  const handleEditEmployeeSubmit = (e) => {
+    e.preventDefault();
+    if (!editingEmployee.name || !editingEmployee.email || !editingEmployee.phone) {
+      toast.error("Name, Email and Phone are required.");
+      return;
+    }
+
+    // Keep avatar updated if name changes, or use the existing avatar if it starts with http
+    const updatedEmployee = {
+      ...editingEmployee,
+      avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(editingEmployee.name)}&background=7C3AED&color=fff`
+    };
+
+    setEmployeesList(prev => prev.map(emp => emp.id === editingEmployee.id ? updatedEmployee : emp));
+    setIsEditEmployeeOpen(false);
+    toast.success(`Updated details for employee: ${editingEmployee.name}`);
+    setEditingEmployee(null);
+  };
+
+  const handleDeleteEmployee = (id, name) => {
+    setEmployeesList(prev => prev.filter(emp => emp.id !== id));
+    toast.error(`Removed employee: ${name}`);
   };
 
   const handleDeleteReview = (id, customerName) => {
@@ -556,6 +628,7 @@ function App() {
     safeRemoveItem('carsList');
     safeRemoveItem('bookingsList');
     safeRemoveItem('customersList');
+    safeRemoveItem('employeesList');
     safeRemoveItem('paymentsList');
     safeRemoveItem('reviewsList');
     safeRemoveItem('adminSettings');
@@ -563,6 +636,7 @@ function App() {
     setCarsList(initialCarsData);
     setBookingsList(recentBookingsData);
     setCustomersList(initialCustomersData);
+    setEmployeesList(initialEmployeesData);
     setPaymentsList(initialPaymentsData);
     setReviewsList(reviewsData);
     setAdminSettings(adminSettingsData);
@@ -721,16 +795,26 @@ function App() {
         setIsAddCustomerOpen={setIsAddCustomerOpen}
         isEditCustomerOpen={isEditCustomerOpen}
         setIsEditCustomerOpen={setIsEditCustomerOpen}
+        isAddEmployeeOpen={isAddEmployeeOpen}
+        setIsAddEmployeeOpen={setIsAddEmployeeOpen}
+        isEditEmployeeOpen={isEditEmployeeOpen}
+        setIsEditEmployeeOpen={setIsEditEmployeeOpen}
         editingCar={editingCar}
         setEditingCar={setEditingCar}
         editingCustomer={editingCustomer}
         setEditingCustomer={setEditingCustomer}
+        editingEmployee={editingEmployee}
+        setEditingEmployee={setEditingEmployee}
         newCar={newCar}
         setNewCar={setNewCar}
         newBooking={newBooking}
         setNewBooking={setNewBooking}
         newCustomer={newCustomer}
         setNewCustomer={setNewCustomer}
+        newEmployee={newEmployee}
+        setNewEmployee={setNewEmployee}
+        employeesList={employeesList}
+        setEmployeesList={setEmployeesList}
 
         handleToggleSidebar={handleToggleSidebar}
         handleToggleMobileSidebar={handleToggleMobileSidebar}
@@ -742,6 +826,10 @@ function App() {
         handleOpenEditCustomer={handleOpenEditCustomer}
         handleEditCustomerSubmit={handleEditCustomerSubmit}
         handleDeleteCustomer={handleDeleteCustomer}
+        handleAddEmployeeSubmit={handleAddEmployeeSubmit}
+        handleOpenEditEmployee={handleOpenEditEmployee}
+        handleEditEmployeeSubmit={handleEditEmployeeSubmit}
+        handleDeleteEmployee={handleDeleteEmployee}
         handleDeleteReview={handleDeleteReview}
         handleCreateBookingSubmit={handleCreateBookingSubmit}
         onUpdateBookingStatus={handleUpdateBookingStatus}
@@ -775,6 +863,8 @@ function AppContent({
   setBookingsList,
   customersList,
   setCustomersList,
+  employeesList,
+  setEmployeesList,
   reviewsList,
   paymentsList,
   adminSettings,
@@ -788,16 +878,24 @@ function AppContent({
   setIsAddCustomerOpen,
   isEditCustomerOpen,
   setIsEditCustomerOpen,
+  isAddEmployeeOpen,
+  setIsAddEmployeeOpen,
+  isEditEmployeeOpen,
+  setIsEditEmployeeOpen,
   editingCar,
   setEditingCar,
   editingCustomer,
   setEditingCustomer,
+  editingEmployee,
+  setEditingEmployee,
   newCar,
   setNewCar,
   newBooking,
   setNewBooking,
   newCustomer,
   setNewCustomer,
+  newEmployee,
+  setNewEmployee,
 
   handleToggleSidebar,
   handleToggleMobileSidebar,
@@ -809,6 +907,10 @@ function AppContent({
   handleOpenEditCustomer,
   handleEditCustomerSubmit,
   handleDeleteCustomer,
+  handleAddEmployeeSubmit,
+  handleOpenEditEmployee,
+  handleEditEmployeeSubmit,
+  handleDeleteEmployee,
   handleDeleteReview,
   handleCreateBookingSubmit,
   onUpdateBookingStatus,
@@ -910,6 +1012,17 @@ function AppContent({
                       onOpenAddCustomer={() => setIsAddCustomerOpen(true)}
                       onEditCustomer={handleOpenEditCustomer}
                       onDeleteCustomer={handleDeleteCustomer}
+                    />
+                  }
+                />
+                <Route
+                  path="/admin/employees"
+                  element={
+                    <EmployeesAdmin
+                      employeesList={employeesList}
+                      onOpenAddEmployee={() => setIsAddEmployeeOpen(true)}
+                      onEditEmployee={handleOpenEditEmployee}
+                      onDeleteEmployee={handleDeleteEmployee}
                     />
                   }
                 />
@@ -1377,6 +1490,209 @@ function AppContent({
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-outline-light text-muted border border-secondary border-opacity-20" onClick={() => { setIsEditCustomerOpen(false); setEditingCustomer(null); }}>Cancel</button>
+                  <button type="submit" className="btn btn-primary">Update Profile</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {isAddEmployeeOpen && (
+          <div className="custom-modal-backdrop" onClick={() => setIsAddEmployeeOpen(false)}>
+            <div className="custom-modal" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h5 className="mb-0 fw-bold">Register Employee Profile</h5>
+                <button className="btn-close text-reset" onClick={() => setIsAddEmployeeOpen(false)} aria-label="Close"></button>
+              </div>
+              <form onSubmit={handleAddEmployeeSubmit}>
+                <div className="modal-body text-start">
+                  <div className="mb-3">
+                    <label htmlFor="empName" className="form-label">Employee Name *</label>
+                    <input
+                      type="text"
+                      id="empName"
+                      className="form-control"
+                      placeholder="e.g. Peter Parker"
+                      value={newEmployee.name}
+                      onChange={(e) => setNewEmployee({ ...newEmployee, name: e.target.value })}
+                      required
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label htmlFor="empEmail" className="form-label">Email ID *</label>
+                    <input
+                      type="email"
+                      id="empEmail"
+                      className="form-control"
+                      placeholder="peter.parker@drivex.com"
+                      value={newEmployee.email}
+                      onChange={(e) => setNewEmployee({ ...newEmployee, email: e.target.value })}
+                      required
+                    />
+                  </div>
+
+                  <div className="row">
+                    <div className="col-6 mb-3">
+                      <label htmlFor="empPhone" className="form-label">Phone Number *</label>
+                      <input
+                        type="text"
+                        id="empPhone"
+                        className="form-control"
+                        placeholder="+91 98765 43210"
+                        value={newEmployee.phone}
+                        onChange={(e) => setNewEmployee({ ...newEmployee, phone: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div className="col-6 mb-3">
+                      <label htmlFor="empRole" className="form-label">Role / Designation *</label>
+                      <select
+                        id="empRole"
+                        className="form-select"
+                        value={newEmployee.role}
+                        onChange={(e) => setNewEmployee({ ...newEmployee, role: e.target.value })}
+                        required
+                      >
+                        <option value="Fleet Manager">Fleet Manager</option>
+                        <option value="Customer Support">Customer Support</option>
+                        <option value="Sales Consultant">Sales Consultant</option>
+                        <option value="Operations Lead">Operations Lead</option>
+                        <option value="Chauffeur">Chauffeur</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="row">
+                    <div className="col-6 mb-3">
+                      <label htmlFor="empStatus" className="form-label">Status *</label>
+                      <select
+                        id="empStatus"
+                        className="form-select"
+                        value={newEmployee.status}
+                        onChange={(e) => setNewEmployee({ ...newEmployee, status: e.target.value })}
+                        required
+                      >
+                        <option value="Active">Active</option>
+                        <option value="On Leave">On Leave</option>
+                        <option value="Inactive">Inactive</option>
+                      </select>
+                    </div>
+                    <div className="col-6 mb-3">
+                      <label htmlFor="empJoinDate" className="form-label">Joining Date *</label>
+                      <input
+                        type="date"
+                        id="empJoinDate"
+                        className="form-control"
+                        value={newEmployee.joiningDate}
+                        onChange={(e) => setNewEmployee({ ...newEmployee, joiningDate: e.target.value })}
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-outline-light text-muted border border-secondary border-opacity-20" onClick={() => setIsAddEmployeeOpen(false)}>Cancel</button>
+                  <button type="submit" className="btn btn-primary">Add Employee</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {isEditEmployeeOpen && editingEmployee && (
+          <div className="custom-modal-backdrop" onClick={() => { setIsEditEmployeeOpen(false); setEditingEmployee(null); }}>
+            <div className="custom-modal" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h5 className="mb-0 fw-bold">Edit Employee Details</h5>
+                <button className="btn-close text-reset" onClick={() => { setIsEditEmployeeOpen(false); setEditingEmployee(null); }} aria-label="Close"></button>
+              </div>
+              <form onSubmit={handleEditEmployeeSubmit}>
+                <div className="modal-body text-start">
+                  <div className="mb-3">
+                    <label htmlFor="editEmpName" className="form-label">Employee Name *</label>
+                    <input
+                      type="text"
+                      id="editEmpName"
+                      className="form-control"
+                      value={editingEmployee.name}
+                      onChange={(e) => setEditingEmployee({ ...editingEmployee, name: e.target.value })}
+                      required
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label htmlFor="editEmpEmail" className="form-label">Email ID *</label>
+                    <input
+                      type="email"
+                      id="editEmpEmail"
+                      className="form-control"
+                      value={editingEmployee.email}
+                      onChange={(e) => setEditingEmployee({ ...editingEmployee, email: e.target.value })}
+                      required
+                    />
+                  </div>
+
+                  <div className="row">
+                    <div className="col-6 mb-3">
+                      <label htmlFor="editEmpPhone" className="form-label">Phone Number *</label>
+                      <input
+                        type="text"
+                        id="editEmpPhone"
+                        className="form-control"
+                        value={editingEmployee.phone}
+                        onChange={(e) => setEditingEmployee({ ...editingEmployee, phone: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div className="col-6 mb-3">
+                      <label htmlFor="editEmpRole" className="form-label">Role / Designation *</label>
+                      <select
+                        id="editEmpRole"
+                        className="form-select"
+                        value={editingEmployee.role}
+                        onChange={(e) => setEditingEmployee({ ...editingEmployee, role: e.target.value })}
+                        required
+                      >
+                        <option value="Fleet Manager">Fleet Manager</option>
+                        <option value="Customer Support">Customer Support</option>
+                        <option value="Sales Consultant">Sales Consultant</option>
+                        <option value="Operations Lead">Operations Lead</option>
+                        <option value="Chauffeur">Chauffeur</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="row">
+                    <div className="col-6 mb-3">
+                      <label htmlFor="editEmpStatus" className="form-label">Status *</label>
+                      <select
+                        id="editEmpStatus"
+                        className="form-select"
+                        value={editingEmployee.status}
+                        onChange={(e) => setEditingEmployee({ ...editingEmployee, status: e.target.value })}
+                        required
+                      >
+                        <option value="Active">Active</option>
+                        <option value="On Leave">On Leave</option>
+                        <option value="Inactive">Inactive</option>
+                      </select>
+                    </div>
+                    <div className="col-6 mb-3">
+                      <label htmlFor="editEmpJoinDate" className="form-label">Joining Date *</label>
+                      <input
+                        type="date"
+                        id="editEmpJoinDate"
+                        className="form-control"
+                        value={editingEmployee.joiningDate}
+                        onChange={(e) => setEditingEmployee({ ...editingEmployee, joiningDate: e.target.value })}
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-outline-light text-muted border border-secondary border-opacity-20" onClick={() => { setIsEditEmployeeOpen(false); setEditingEmployee(null); }}>Cancel</button>
                   <button type="submit" className="btn btn-primary">Update Profile</button>
                 </div>
               </form>
