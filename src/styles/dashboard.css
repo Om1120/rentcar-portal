@@ -738,8 +738,8 @@
 
 .dashboard-app .form-control,
 .dashboard-app .form-select {
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border-color);
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid var(--border-color) !important;
   color: var(--text-main) !important;
   font-size: 0.92rem;
   padding: 10px 14px;
@@ -747,9 +747,15 @@
 
 .dashboard-app .form-control:focus,
 .dashboard-app .form-select:focus {
-  background-color: rgba(255, 255, 255, 0.08);
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  background-color: rgba(0, 0, 0, 0.3) !important;
+  border-color: #3b82f6 !important;
+  color: var(--text-main) !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
+}
+
+.dashboard-app .form-select option {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
 }
 
 /* Toastify Override for Premium Appearance */

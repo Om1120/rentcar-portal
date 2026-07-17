@@ -352,8 +352,8 @@ span[style*="cursor: pointer"]:hover {
 .form-select:focus {
   background-color: var(--white) !important;
   border-color: var(--secondary) !important;
-  color: var(--text) !important;
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15) !important;
+  color: #0F172A !important;
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.15) !important;
 }
 
 .form-control::placeholder {
