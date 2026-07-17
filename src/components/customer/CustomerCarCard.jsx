@@ -44,9 +44,6 @@ const CarImage = styled.img`
 `;
 
 const CategoryBadge = styled.span`
-  position: absolute;
-  top: 15px;
-  left: 15px;
   background: linear-gradient(135deg, var(--website-primary, #7C3AED) 0%, var(--website-secondary, #06B6D4) 100%);
   color: #ffffff;
   padding: 4px 12px;
@@ -59,9 +56,6 @@ const CategoryBadge = styled.span`
 `;
 
 const StatusBadge = styled.span`
-  position: absolute;
-  top: 15px;
-  right: 15px;
   background: ${props => props.status === 'Available' ? 'rgba(16, 185, 129, 0.15)' : props.status === 'Booked' ? 'rgba(59, 130, 246, 0.15)' : 'rgba(239, 68, 68, 0.15)'};
   color: ${props => props.status === 'Available' ? '#10b981' : props.status === 'Booked' ? '#3b82f6' : '#ef4444'};
   border: 1px solid ${props => props.status === 'Available' ? '#10b981' : props.status === 'Booked' ? '#3b82f6' : '#ef4444'};
@@ -70,6 +64,15 @@ const StatusBadge = styled.span`
   font-weight: 700;
   border-radius: 20px;
   text-transform: uppercase;
+`;
+
+const CardFooter = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
 `;
 
 const Content = styled.div`
@@ -149,8 +152,6 @@ function CustomerCarCard({ car, onRent, showRentButton = true }) {
     <Card>
       <ImageContainer>
         <CarImage className="car-image" src={image} alt={name} />
-        <CategoryBadge>{category}</CategoryBadge>
-        <StatusBadge status={status}>{status}</StatusBadge>
       </ImageContainer>
       <Content>
         <CarName>{name}</CarName>
@@ -187,6 +188,10 @@ function CustomerCarCard({ car, onRent, showRentButton = true }) {
             </CustomButton>
           )}
         </ButtonRow>
+        <CardFooter>
+          <CategoryBadge>{category}</CategoryBadge>
+          <StatusBadge status={status}>{status}</StatusBadge>
+        </CardFooter>
       </Content>
     </Card>
   );
