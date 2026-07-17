@@ -140,19 +140,23 @@ function App() {
     return safeGetItem('carsList', initialCarsData);
   });
   const [bookingsList, setBookingsList] = useState(() => {
-    return safeGetItem('bookingsList', recentBookingsData);
+    const list = safeGetItem('bookingsList', recentBookingsData);
+    return Array.isArray(list) ? list.filter(b => b.customerName && !b.customerName.toLowerCase().includes('nishant')) : recentBookingsData;
   });
   const [customersList, setCustomersList] = useState(() => {
-    return safeGetItem('customersList', initialCustomersData);
+    const list = safeGetItem('customersList', initialCustomersData);
+    return Array.isArray(list) ? list.filter(c => c.name && !c.name.toLowerCase().includes('nishant')) : initialCustomersData;
   });
   const [employeesList, setEmployeesList] = useState(() => {
     return safeGetItem('employeesList', initialEmployeesData);
   });
   const [paymentsList, setPaymentsList] = useState(() => {
-    return safeGetItem('paymentsList', initialPaymentsData);
+    const list = safeGetItem('paymentsList', initialPaymentsData);
+    return Array.isArray(list) ? list.filter(p => p.customerName && !p.customerName.toLowerCase().includes('nishant')) : initialPaymentsData;
   });
   const [reviewsList, setReviewsList] = useState(() => {
-    return safeGetItem('reviewsList', reviewsData);
+    const list = safeGetItem('reviewsList', reviewsData);
+    return Array.isArray(list) ? list.filter(r => r.customerName && !r.customerName.toLowerCase().includes('nishant')) : reviewsData;
   });
   const [adminSettings, setAdminSettings] = useState(() => {
     return safeGetItem('adminSettings', adminSettingsData);
