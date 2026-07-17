@@ -4,6 +4,47 @@ DriveX is a full-featured, responsive React application containing both a consum
 
 ---
 
+## 🔗 Live Deployment & Repository
+
+- **Live Production URL:** [https://rentcar-orcin.vercel.app](https://rentcar-orcin.vercel.app)
+- **GitHub Repository:** [https://github.com/Om1120/rentcar-portal](https://github.com/Om1120/rentcar-portal)
+
+---
+
+## 🚀 Getting Started
+
+Follow these steps to run the application locally:
+
+### Prerequisites
+
+Ensure you have [Node.js](https://nodejs.org/) installed (v18+ recommended).
+
+### Installation & Setup
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Om1120/rentcar-portal.git
+   cd rentcar-portal
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Start the local development server:**
+   ```bash
+   npm run dev
+   ```
+
+4. **Build the production package:**
+   ```bash
+   npm run build
+   ```
+
+
+---
+
 ## 🛠️ Technology Stack & Languages
 
 This application is built with core modern web technologies following clean React architectural patterns:
@@ -40,7 +81,7 @@ The project divides its routing structure into two distinct portals: **Customer 
 
 ---
 
-## 🧩 Components List (25 Components)
+## 🧩 Components List (27 Components)
 
 The codebase leverages reusable, modular UI components to keep the layout organized and maintainable.
 
@@ -61,7 +102,7 @@ The codebase leverages reusable, modular UI components to keep the layout organi
 14. **Footer**: Navigation links and social icons.
 15. **ActivityCard**: Individual log item in the recent activity feed.
 
-### Customer Components (10)
+### Customer Components (12)
 16. **CustomButton**: Styled button component with options for sizes, fills, and outline modes.
 17. **CustomerCarCard**: Visual showcase for car previews with specifications.
 18. **CustomerChartCard**: Clean container wrapper for charts on the public page.
@@ -72,6 +113,9 @@ The codebase leverages reusable, modular UI components to keep the layout organi
 23. **InquiryModal**: Pop-up reservation wizard prompting details like pickup dates and locations.
 24. **SectionTitle**: Heading helper that formats titles and descriptions consistently.
 25. **StatsCard**: Highlight card containing large animated metrics.
+26. **CustomerLoginModal**: Interactive pop-up dialog enabling user login with forms.
+27. **Hero**: High-impact promotional banner section on the customer landing page.
+
 
 ---
 
