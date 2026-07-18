@@ -601,7 +601,7 @@ export const initialEmployeesData = [
     role: 'Fleet Manager',
     status: 'Active',
     joiningDate: '2024-01-18',
-    avatar: 'https://ui-avatars.com/api/?name=Aarav+Mehta&background=7C3AED&color=fff',
+    avatar: 'https://ui-avatars.com/api/?name=Nishant+Rami&background=7C3AED&color=fff',
   },
   {
     id: 'emp-2',
@@ -611,7 +611,7 @@ export const initialEmployeesData = [
     role: 'Customer Support',
     status: 'Active',
     joiningDate: '2024-03-15',
-    avatar: 'https://ui-avatars.com/api/?name=Ananya+Sharma&background=06B6D4&color=fff',
+    avatar: 'https://ui-avatars.com/api/?name=Kirtan+Vaja&background=06B6D4&color=fff',
   },
   {
     id: 'emp-3',
@@ -631,7 +631,7 @@ export const initialEmployeesData = [
     role: 'Operations Lead',
     status: 'Active',
     joiningDate: '2023-11-20',
-    avatar: 'https://ui-avatars.com/api/?name=Pooja+Patel&background=8B5CF6&color=fff',
+    avatar: 'https://ui-avatars.com/api/?name=Darshna+Bhadada&background=8B5CF6&color=fff',
   }
 ];
 
