@@ -874,6 +874,8 @@ function App() {
         isCustomerLoginOpen={isCustomerLoginOpen}
         setIsCustomerLoginOpen={setIsCustomerLoginOpen}
         onCustomerLoginSuccess={handleCustomerLoginSuccess}
+        isCustomerAuthenticated={isCustomerAuthenticated}
+        onCustomerLogout={handleCustomerLogout}
       />
     </Router>
   );
@@ -954,7 +956,9 @@ function AppContent({
   customerEmail,
   isCustomerLoginOpen,
   setIsCustomerLoginOpen,
-  onCustomerLoginSuccess
+  onCustomerLoginSuccess,
+  isCustomerAuthenticated,
+  onCustomerLogout
 }) {
   const location = useLocation();
   const navigate = useNavigate();
