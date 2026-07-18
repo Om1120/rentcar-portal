@@ -1766,7 +1766,7 @@ function AppContent({
         websiteName={adminSettings.websiteName}
         isCustomerAuthenticated={isCustomerAuthenticated}
         customerEmail={customerEmail}
-        onCustomerLogout={handleCustomerLogout}
+        onCustomerLogout={onCustomerLogout}
       />
 
       <main style={{ flexGrow: 1 }}>
