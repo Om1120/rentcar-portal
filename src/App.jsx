@@ -125,7 +125,8 @@ function App() {
   const [mobileSidebarShow, setMobileSidebarShow] = useState(false);
 
   const [isCustomerAuthenticated, setIsCustomerAuthenticated] = useState(() => {
-    return safeGetItem('isCustomerAuthenticated', 'false') === 'true';
+    const saved = safeGetItem('isCustomerAuthenticated', false);
+    return saved === true || saved === 'true';
   });
   const [customerEmail, setCustomerEmail] = useState(() => {
     return safeGetItem('customerEmail', '');
@@ -133,7 +134,8 @@ function App() {
   const [isCustomerLoginOpen, setIsCustomerLoginOpen] = useState(false);
   const [pendingCarRent, setPendingCarRent] = useState(null);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(() => {
-    return safeGetItem('isAdminAuthenticated', 'false') === 'true';
+    const saved = safeGetItem('isAdminAuthenticated', false);
+    return saved === true || saved === 'true';
   });
 
   const [carsList, setCarsList] = useState(() => {
@@ -212,6 +214,18 @@ function App() {
   useEffect(() => {
     safeSetItem('adminSettings', adminSettings);
   }, [adminSettings]);
+
+  useEffect(() => {
+    safeSetItem('isAdminAuthenticated', isAdminAuthenticated);
+  }, [isAdminAuthenticated]);
+
+  useEffect(() => {
+    safeSetItem('isCustomerAuthenticated', isCustomerAuthenticated);
+  }, [isCustomerAuthenticated]);
+
+  useEffect(() => {
+    safeSetItem('customerEmail', customerEmail);
+  }, [customerEmail]);
 
   // Tab state synchronization via localStorage storage event
   useEffect(() => {
@@ -678,6 +692,14 @@ function App() {
       setIsInquiryOpen(true);
       setPendingCarRent(null);
     }
+  };
+
+  const handleCustomerLogout = () => {
+    setIsCustomerAuthenticated(false);
+    setCustomerEmail('');
+    safeRemoveItem('isCustomerAuthenticated');
+    safeRemoveItem('customerEmail');
+    toast.info("Logged out successfully.");
   };
 
   const handleInquirySubmit = (inquiryData) => {
@@ -1736,7 +1758,12 @@ function AppContent({
       '--website-text-main': adminSettings.themeColors.textDark
     }}>
 
-      <CustomerNavbar websiteName={adminSettings.websiteName} />
+      <CustomerNavbar
+        websiteName={adminSettings.websiteName}
+        isCustomerAuthenticated={isCustomerAuthenticated}
+        customerEmail={customerEmail}
+        onCustomerLogout={handleCustomerLogout}
+      />
 
       <main style={{ flexGrow: 1 }}>
         <Routes>

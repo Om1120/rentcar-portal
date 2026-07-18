@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
-import { FaHome, FaCar, FaBookOpen, FaStar, FaEnvelope } from 'react-icons/fa';
+import { FaHome, FaCar, FaBookOpen, FaStar, FaEnvelope, FaUser, FaSignOutAlt } from 'react-icons/fa';
 import adminImage from '../../assets/admin image.jpeg';
 
 const NavContainer = styled.div`
@@ -102,7 +102,60 @@ const AvatarWrapper = styled.div`
   }
 `;
 
-function CustomerNavbar() {
+const CustomerWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  max-width: 200px;
+  transition: all 0.3s ease;
+
+  .customer-email {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #e2e8f0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 110px;
+  }
+  
+  @media (max-width: 480px) {
+    max-width: 120px;
+    .customer-email {
+      display: none;
+    }
+  }
+`;
+
+const LogoutButton = styled.button`
+  background: none;
+  border: none;
+  color: #f87171;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+
+  &:hover {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.15);
+    transform: scale(1.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+`;
+
+function CustomerNavbar({ websiteName, isCustomerAuthenticated, customerEmail, onCustomerLogout }) {
   return (
     <NavContainer>
       <NavPill>
@@ -126,12 +179,24 @@ function CustomerNavbar() {
           <FaEnvelope />
           <span>Contact</span>
         </MenuLink>
-        <MenuLink to="/admin">
-          <AvatarWrapper className="avatar-wrapper">
-            <img src={adminImage} alt="Admin" />
-          </AvatarWrapper>
-          <span>Admin</span>
-        </MenuLink>
+        {isCustomerAuthenticated ? (
+          <CustomerWrapper>
+            <FaUser style={{ fontSize: '0.85rem', color: 'var(--website-secondary, #06B6D4)' }} />
+            <span className="customer-email" title={customerEmail}>
+              {customerEmail.length > 15 ? `${customerEmail.substring(0, 15)}...` : customerEmail}
+            </span>
+            <LogoutButton onClick={onCustomerLogout} title="Sign Out">
+              <FaSignOutAlt />
+            </LogoutButton>
+          </CustomerWrapper>
+        ) : (
+          <MenuLink to="/admin">
+            <AvatarWrapper className="avatar-wrapper">
+              <img src={adminImage} alt="Admin" />
+            </AvatarWrapper>
+            <span>Admin</span>
+          </MenuLink>
+        )}
       </NavPill>
     </NavContainer>
   );
